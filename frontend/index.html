@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>FITS</title>
     <script language="javascript" type="text/javascript" src="drawer.js"></script>
+    <script>
+        socketio.on('socket_get_interval_for_chart_vehicles_by_type', (time_interval) => {
+            Plotly.relayout('chart-vehicles-by-type-per-interval', {
+                xaxis: {
+                    title: {
+                        text: `Time start for each interval (${time_interval}-seconds-long intervals)`,
+                    }
+                }
+            });
+        })
+    </script>
 </head>
 <body>
     <div id="canvas">

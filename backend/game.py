@@ -1,3 +1,4 @@
+from backend.boards import BOARD_1
 from shapes import ALL_SHAPES
 
 
@@ -15,9 +16,14 @@ def print_shapes(list_of_shapes: list = ALL_SHAPES):
                         print(' ', end='')
 
 
-def main():
-    print_shapes()
+def run_game(board: list = BOARD_1):
+    while True:         # TODO add key handling
+        yield board
 
-
-if __name__ == "__main__":
-    main()
+#
+# def main():
+#     print_shapes()
+#
+#
+# if __name__ == "__main__":
+#     main()

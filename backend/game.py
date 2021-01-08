@@ -1,3 +1,5 @@
+import random
+
 from backend.boards import BOARD_1
 from backend.shapes import ALL_SHAPES
 
@@ -21,14 +23,19 @@ class Game:
                         else:
                             print(' ', end='')
 
+    def get_random_shape(self):
+        return random.choice(self.all_shapes)
+
     def get_board(self) -> list:
         return self.board
 
     def run_game(self, board: list = BOARD_1):
         print('in run_game')
-        # while True:         # TODO add key handling
-        #     self.socket_io.emit('board_display', 'xd')
-            # yield board
+        run = True
+        while run:         # TODO add key handling
+            current_block = self.get_random_shape()
+            yield {'current_block': current_block}
+            run = False
 
 #
 # def main():

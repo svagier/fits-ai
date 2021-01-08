@@ -1,24 +1,34 @@
 from backend.boards import BOARD_1
-from shapes import ALL_SHAPES
+from backend.shapes import ALL_SHAPES
 
 
-def print_shapes(list_of_shapes: list = ALL_SHAPES):
-    for list_of_rotations in list_of_shapes:
-        print('\n\n Shape:', end='')
-        for rotated_shape in list_of_rotations:
-            print()
-            for row_list in rotated_shape:
+class Game:
+    def __init__(self, socket_io):
+        self.all_shapes = ALL_SHAPES
+        self.board = BOARD_1
+        self.socket_io = socket_io
+
+    def print_shapes(self):
+        for list_of_rotations in self.all_shapes:
+            print('\n\n Shape:', end='')
+            for rotated_shape in list_of_rotations:
                 print()
-                for elem in row_list:
-                    if elem:
-                        print('*', end='')
-                    else:
-                        print(' ', end='')
+                for row_list in rotated_shape:
+                    print()
+                    for elem in row_list:
+                        if elem:
+                            print('*', end='')
+                        else:
+                            print(' ', end='')
 
+    def get_board(self) -> list:
+        return self.board
 
-def run_game(board: list = BOARD_1):
-    while True:         # TODO add key handling
-        yield board
+    def run_game(self, board: list = BOARD_1):
+        print('in run_game')
+        # while True:         # TODO add key handling
+        #     self.socket_io.emit('board_display', 'xd')
+            # yield board
 
 #
 # def main():

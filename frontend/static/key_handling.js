@@ -5,7 +5,10 @@ window.addEventListener("keydown", function(event) {
 
   switch(event.code) {
     case "KeyR":
-      rotateCurrentBlock();
+      rotateCurrentBlockClockwise();
+      break;
+    case "KeyE":
+      rotateCurrentBlockCounterclockwise();
       break;
   }
 

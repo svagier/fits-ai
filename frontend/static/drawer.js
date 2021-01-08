@@ -9,7 +9,7 @@ const socketio = io();
 // TODO add getting field_colors to Field Enum from backend
 let field_colors = new Map()
 field_colors.set(0, 'grey')   // EMPTY
-field_colors.set(1, 'blue')   // TAKEN
+field_colors.set(1, '#2B252C')   // TAKEN
 field_colors.set(2, '#232744')   // EXTRA_EMPTY     // TODO add getting it from background
 
 function setup() {
@@ -80,10 +80,18 @@ function drawCurrentBlock(current_block) {
   }
 }
 
-function rotateCurrentBlock() {
+function rotateCurrentBlockClockwise() {
   current_rotation += 1;
   if (current_rotation === current_block_with_rotations.length) {
     current_rotation = 0;
+  }
+  drawCurrentBlock(current_block_with_rotations[current_rotation]);
+}
+
+function rotateCurrentBlockCounterclockwise() {
+  current_rotation -= 1;
+  if (current_rotation === -1) {
+    current_rotation = current_block_with_rotations.length - 1;
   }
   drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }

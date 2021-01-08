@@ -9,11 +9,11 @@ class Field(Enum):
     PLUS_2 = 4
     PLUS_3 = 5
     MINUS_5 = 6
-    DOUBLE_GREEN = 7
-    DOUBLE_BLUE = 8
-    DOUBLE_ORANGE = 9
-    DOUBLE_PINK = 10
-    DOUBLE_PURPLE = 11
+    PAIR_1 = 7
+    PAIR_2 = 8
+    PAIR_3 = 9
+    PAIR_4 = 10
+    PAIR_5 = 11
 
 
 EMPTY = Field.EMPTY.value

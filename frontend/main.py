@@ -22,7 +22,8 @@ def index():
 def show_board():
     if request.method == 'POST':
         board = app.game.get_board()
-        socket_io.emit('board_display', board)
+        field_size_in_px = 20
+        socket_io.emit('board_display', [board, field_size_in_px])
     return render_template('index.html')
 
 

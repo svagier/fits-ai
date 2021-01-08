@@ -1,3 +1,4 @@
+import os
 from os.path import dirname
 
 from flask import Flask, render_template, request
@@ -6,8 +7,9 @@ from flask_socketio import SocketIO
 from backend.game import Game
 
 
-template_dir = dirname(__file__)
-app = Flask(__name__, template_folder=template_dir)
+template_dir = os.path.join(dirname(__file__), 'templates')
+static_dir = os.path.join(dirname(__file__), 'static')
+app = Flask(__name__, template_folder=template_dir, static_url_path=static_dir)
 socket_io = SocketIO(app)
 
 

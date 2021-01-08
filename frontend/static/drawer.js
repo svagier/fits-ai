@@ -14,6 +14,7 @@ field_colors.set(2, '#232744')   // EXTRA_EMPTY     // TODO add getting it from 
 function setup() {
   $.post("/game_setup")
   $.post("/show_board")
+  $.post("/start_game")
 }
 
 socketio.on('game_setup', (setup_data) => {
@@ -60,15 +61,17 @@ function draw_current_block(current_block) {
   let canvas = document.getElementById('canvas');
   if (canvas.getContext) {
     let ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'green';
     let row_number = 0
     current_block.forEach(row => {
       let column_number = 0
       row.forEach(field => {
-        ctx.fillStyle = 'green';
-        const x_pos = column_number * field_size  + column_number * field_offset
-        const y_pos = row_number * field_size + row_number * field_offset
-        ctx.fillRect(x_pos, y_pos, field_size, field_size);
-        column_number += 1
+        if (field) {
+          const x_pos = column_number * field_size  + column_number * field_offset
+          const y_pos = row_number * field_size + row_number * field_offset
+          ctx.fillRect(x_pos, y_pos, field_size, field_size);
+          column_number += 1
+        }
       });
       row_number += 1
     });

@@ -1,5 +1,7 @@
 from enum import Enum
 
+import numpy as np
+
 
 class Field(Enum):
     EMPTY = 0
@@ -26,7 +28,7 @@ points are given for filling EXTRA_EMPTY Fields. There are 3 rows of EXTRA_EMPTY
 the game are 4 Fields high, and there is no point in placing Block solely on EXTRA_EMPTY Fields (there will be no points
 for that).
 """
-BOARD_1 = \
+BOARD_1 = np.array(
     [
         [EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY],
         [EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY],
@@ -43,5 +45,5 @@ BOARD_1 = \
         [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
-    ]
+    ])
 

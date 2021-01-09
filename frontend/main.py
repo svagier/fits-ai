@@ -33,7 +33,7 @@ def game_setup():
 def show_board():
     if request.method == 'POST':
         board = app.game.get_board()
-        socket_io.emit('board_display', board)
+        socket_io.emit('board_display', board.tolist())
     return render_template('index.html')
 
 
@@ -46,12 +46,12 @@ def start_game():
 
 def run_game_and_send_to_front():
     for turn_dict in app.game.run_game():
-        socket_io.emit('current_block', turn_dict['current_block'])
+        socket_io.emit('current_block', [nparray.tolist() for nparray in turn_dict['current_block']])
         print('turn_data', turn_dict)
 
 
 if __name__ == '__main__':
     app.url_base = 'localhost'
     app.port = 5000
-    app.game = Game(socket_io)
+    app.game = Game()
     socket_io.run(app, host=app.url_base, port=app.port, debug=True)

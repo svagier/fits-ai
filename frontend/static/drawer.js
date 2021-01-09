@@ -138,6 +138,9 @@ function placeCurrentBlock() {
   });
 }
 
+function rejectCurrentBlock() {
+  $.post("/reject_current_block")
+}
 
 function clearContainerForCurrentBlock(ctx) {
   ctx.clearRect(0, 0, ctx.canvas.width, container_height_for_current_block);

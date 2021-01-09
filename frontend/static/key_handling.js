@@ -10,6 +10,9 @@ window.addEventListener("keydown", function(event) {
     case "KeyE":
       rotateCurrentBlockCounterclockwise();
       break;
+    case "KeyP":
+      rejectCurrentBlock();
+      break;
     case "KeyA":
     case "ArrowLeft":
       moveCurrentBlockLeft();

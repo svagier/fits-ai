@@ -51,6 +51,12 @@ def can_place_block():
     return render_template('index.html')
 
 
+@app.route('/reject_current_block', methods=['POST'])
+def reject_current_block():
+    next_turn()
+    return render_template('index.html')
+
+
 @app.route('/start_game', methods=['POST'])
 def start_game():
     if request.method == 'POST':

@@ -64,36 +64,42 @@ class Game:
         highest_column_index = min(peaks_of_columns_below_block)
         shortest_column_index = max(peaks_of_columns_below_block)
         initial_start_row_index = highest_column_index - block_height + 1
-        if not self.can_place_block(initial_start_row_index, start_col, block):
-            raise Exception     # TODO test this edge case, add descripion to function
+        if initial_start_row_index not in range(0, self.board_height):
+            initial_start_row_index = 0
+        last_valid_row_index = None
+        if self.can_place_block(initial_start_row_index, start_col, block):
+            last_valid_row_index = initial_start_row_index
+        else:
+            return None
         start_row_index = initial_start_row_index
         while start_row_index <= shortest_column_index:
             if not self.can_place_block(start_row_index, start_col, block):
-                return start_row_index - 1
+                break
             else:
+                last_valid_row_index = start_row_index
                 start_row_index += 1
-        return None
+        if last_valid_row_index is None:
+            raise Exception
+        else:
+            return last_valid_row_index
 
     def can_place_block(self, start_row: int, start_col: int, block: np.array) -> bool:
         block_height, block_width = block.shape
         end_row = start_row + block_height
         end_col = start_col + block_width
-        if end_row > self.board_height or end_col > self.board_width:
-            print('Cannot place block outside the Board!')
+        if end_row > self.board_height or end_col > self.board_width:   # block would be outside the Board
             return False
         part_of_board_to_be_changed = self.__taken_board[start_row:end_row, start_col:end_col]
         changed_part_of_board = part_of_board_to_be_changed + block
         if 2 in changed_part_of_board:      # the block to be placed overlaps some taken field
-            print('Cannot place block here!')
             return False
         else:
-            print('Block can be placed here.')
             return True
 
     def player_place_block(self, start_col: int, block: np.array) -> bool:
         if self.is_column_index_correct(start_col, block):
             start_row = self.find_start_row(start_col, block)
-            if not start_row:
+            if start_row is None:
                 return False
             self.place_block(start_row, start_col, block)
             return True

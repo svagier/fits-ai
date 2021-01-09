@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from backend.boards import BOARD_1
+from backend.boards import BOARD_1, FieldType
 from backend.shapes import ALL_SHAPES
 
 
@@ -95,11 +95,28 @@ class Game:
         else:
             return False
 
+    def update_taken_board(self, start_row: int, end_row: int, start_col: int, end_col: int, block: np.array):
+        self.__taken_board[start_row:end_row, start_col:end_col] += block
+
+    def update_main_board(self, start_row: int, end_row: int, start_col: int, end_col: int, block: np.array):
+        for row_num in range(start_row, end_row):
+            for col_num in range(start_col, end_col):
+                incoming_block_exists_on_this_field = block[row_num - start_row, col_num - start_col] == 1
+                if incoming_block_exists_on_this_field:
+                    field_value_on_board = self.board[row_num, col_num]
+                    if field_value_on_board == FieldType.EMPTY.value or field_value_on_board == FieldType.EXTRA_EMPTY.value:
+                        self.board[row_num, col_num] = FieldType.TAKEN.value
+                    # elif: add handling for PAIRS handling TODO
+                    elif field_value_on_board == FieldType.TAKEN.value:
+                        raise Exception('If this exception is raised, it means that there is a bug and this block'
+                                        'should not be placed here. It should have been never allowed to this function '
+                                        '(update_main_board).')     # for DEBUG, need to comment out later TODO
+
     def place_block(self, start_row: int, start_col: int, block: np.array):
         end_row = start_row + block.shape[0]            # this row will not be included (exclusive indexing)
         end_col = start_col + block.shape[1]            # this column will not be included (exclusive indexing)
-        self.__taken_board[start_row:end_row, start_col:end_col] += block
-        self.board[start_row:end_row, start_col:end_col] += block
+        self.update_taken_board(start_row, end_row, start_col, end_col, block)
+        self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)
 
     def run_game(self):

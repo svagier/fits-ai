@@ -3,7 +3,7 @@ from enum import Enum
 import numpy as np
 
 
-class Field(Enum):
+class FieldType(Enum):
     EMPTY = 0
     TAKEN = 1       # this should always be 1!
     EXTRA_EMPTY = 2
@@ -18,8 +18,8 @@ class Field(Enum):
     PAIR_5 = 11
 
 
-EMPTY = Field.EMPTY.value
-EXTRA_EMPTY = Field.EXTRA_EMPTY.value
+EMPTY = FieldType.EMPTY.value
+EXTRA_EMPTY = FieldType.EXTRA_EMPTY.value
 
 """
 Each Board is 12 Fields high and 6 Fields wide.

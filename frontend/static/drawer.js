@@ -9,7 +9,7 @@ let current_block_start_column;
 let current_block_width;    // in fields
 const socketio = io();
 
-// TODO add getting field_colors to Field Enum from backend
+// TODO add getting field_colors to FieldType Enum from backend
 let field_colors = new Map()
 field_colors.set(0, 'grey')   // EMPTY
 field_colors.set(1, '#2B252C')   // TAKEN

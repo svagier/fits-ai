@@ -70,7 +70,7 @@ def next_turn():
     turn_dict = app.game.next_turn()
     # if turn_dict['is_finish']:
         # TODO
-    if 'new_shape' in turn_dict.keys() and turn_dict['new_shape']:
+    if 'new_shape' in turn_dict.keys():
         socket_io.emit('current_shape', turn_dict['new_shape'])
     if 'remaining_shapes' in turn_dict.keys() and turn_dict['remaining_shapes']:
         socket_io.emit('remaining_shapes', turn_dict['remaining_shapes'])

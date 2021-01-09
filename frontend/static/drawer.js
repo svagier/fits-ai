@@ -39,11 +39,20 @@ socketio.on('board_display', (board) => {
 })
 
 socketio.on('current_shape', (current_block_rotations) => {
-  current_block_with_rotations = current_block_rotations;
-  current_rotation = 0;
-  current_block_start_column = 0;
-  current_block_width = current_block_with_rotations[current_rotation][0].length
-  drawCurrentBlock(current_block_rotations[current_rotation])
+  if (current_block_rotations) {
+    current_block_with_rotations = current_block_rotations;
+    current_rotation = 0;
+    current_block_start_column = 0;
+    current_block_width = current_block_with_rotations[current_rotation][0].length
+    drawCurrentBlock(current_block_rotations[current_rotation])
+  }
+  else {
+    let canvas = document.getElementById('canvas');
+    if (canvas.getContext) {
+      let ctx = canvas.getContext('2d');
+      clearContainerForCurrentBlock(ctx);
+    }
+  }
 })
 
 socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
@@ -123,39 +132,47 @@ function drawCurrentBlock(current_block) {
 }
 
 function rotateCurrentBlockClockwise() {
-  current_rotation += 1;
-  if (current_rotation === current_block_with_rotations.length) {
-    current_rotation = 0;
+  if (current_block_with_rotations) {
+    current_rotation += 1;
+    if (current_rotation === current_block_with_rotations.length) {
+      current_rotation = 0;
+    }
+    current_block_width = current_block_with_rotations[current_rotation][0].length
+    current_block_start_column = 0
+    drawCurrentBlock(current_block_with_rotations[current_rotation]);
   }
-  current_block_width = current_block_with_rotations[current_rotation][0].length
-  current_block_start_column = 0
-  drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
 
 function rotateCurrentBlockCounterclockwise() {
-  current_rotation -= 1;
-  if (current_rotation === -1) {
-    current_rotation = current_block_with_rotations.length - 1;
+  if (current_block_with_rotations) {
+    current_rotation -= 1;
+    if (current_rotation === -1) {
+      current_rotation = current_block_with_rotations.length - 1;
+    }
+    current_block_width = current_block_with_rotations[current_rotation][0].length
+    current_block_start_column = 0
+    drawCurrentBlock(current_block_with_rotations[current_rotation]);
   }
-  current_block_width = current_block_with_rotations[current_rotation][0].length
-  current_block_start_column = 0
-  drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
 
 function moveCurrentBlockLeft() {
-  current_block_start_column -= 1;
-  if (current_block_start_column <= -1) {
-    current_block_start_column = number_of_columns - current_block_width;
+  if (current_block_with_rotations) {
+    current_block_start_column -= 1;
+    if (current_block_start_column <= -1) {
+      current_block_start_column = number_of_columns - current_block_width;
+    }
+    drawCurrentBlock(current_block_with_rotations[current_rotation]);
   }
-  drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
 
 function moveCurrentBlockRight() {
-  current_block_start_column += 1;
-  if (current_block_start_column > number_of_columns - current_block_width) {
-    current_block_start_column = 0;
+  if (current_block_with_rotations) {
+    current_block_start_column += 1;
+    if (current_block_start_column > number_of_columns - current_block_width) {
+      current_block_start_column = 0;
+    }
+    drawCurrentBlock(current_block_with_rotations[current_rotation]);
   }
-  drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
 
 function placeCurrentBlock() {

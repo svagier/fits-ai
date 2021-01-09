@@ -15,6 +15,7 @@ class Game:
         self.board_width = board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks = np.zeros((self.board_width,), dtype=int)
+        self.current_shape = None
 
     def print_shapes(self):
         for list_of_rotations in self.all_shapes:
@@ -45,6 +46,17 @@ class Game:
             print('Block can be placed here.')
             return True
 
+    def can_player_place_block(self, start_col: int, block: np.array) -> bool:
+        # changed_part_of_board = self.__taken_board[start_row:start_row + block.shape[0], start_col:start_col + block.shape[1]] + block
+        # print("Changed part of board:", changed_part_of_board)
+        # if 2 in changed_part_of_board:
+        #     print('Cannot place block here!')
+        #     return False
+        # else:
+        #     print('Block can be placed here.')
+        #     return True
+        return  # TODO
+
     def place_block(self, start_row: int, start_col: int, block: np.array):
         self.__taken_board[start_row:start_row + block.shape[0], start_col:start_col + block.shape[1]] += block
         # TODO add for self.board ?
@@ -53,8 +65,8 @@ class Game:
         print('in run_game')
         run = True
         while run:
-            current_block = self.get_random_shape()
-            yield {'current_block': current_block}
+            self.current_shape = self.get_random_shape()
+            yield {'current_shape': self.current_shape}
             run = False
 
 

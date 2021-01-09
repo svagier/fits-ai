@@ -18,6 +18,11 @@ window.addEventListener("keydown", function(event) {
     case "ArrowRight":
       moveCurrentBlockRight();
       break;
+    case "KeyS":
+    case "ArrowDown":
+    case "Space":
+      placeCurrentBlock();
+      break;
   }
 
   // Consume the event so it doesn't get handled twice      // commented out since Ctrl+F5 didn't work

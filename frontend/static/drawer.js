@@ -36,7 +36,7 @@ socketio.on('board_display', (board) => {
   });
 })
 
-socketio.on('current_block', (current_block_rotations) => {
+socketio.on('current_shape', (current_block_rotations) => {
   current_block_with_rotations = current_block_rotations;
   current_rotation = 0;
   current_block_start_column = 0;
@@ -123,7 +123,21 @@ function moveCurrentBlockRight() {
   drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
 
-
+function placeCurrentBlock() {
+  let data = {"rotation_index": current_rotation, "start_column": current_block_start_column};
+  $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      url: '/can_place_block',
+      dataType : 'json',
+      data : JSON.stringify(data),
+      success : function(result) {
+        jQuery("#clash").html(result);
+      },error : function(result){
+         console.log(result);
+      }
+  });
+}
 
 
 function clearContainerForCurrentBlock(ctx) {

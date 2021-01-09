@@ -5,7 +5,7 @@ import numpy as np
 
 class Field(Enum):
     EMPTY = 0
-    TAKEN = 1
+    TAKEN = 1       # this should always be 1!
     EXTRA_EMPTY = 2
     PLUS_1 = 3
     PLUS_2 = 4

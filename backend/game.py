@@ -15,7 +15,6 @@ class Game:
         self.board_width = board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
-        print(self.__column_peaks_row_indexes)
         self.current_shape = None
 
     def print_shapes(self):
@@ -61,9 +60,8 @@ class Game:
     """Row numbers start from top (row number 0 at top of the displayed board)."""
     def find_start_row(self, start_col: int, block: np.array) -> int:
         block_width = len(block[0])
-        block_height = len(block)
         peaks_of_columns_below_block = self.__column_peaks_row_indexes[start_col:start_col+block_width]
-        initial_start_row_index = min(peaks_of_columns_below_block) - block_height + 1
+        initial_start_row_index = min(peaks_of_columns_below_block)
         start_row_index = initial_start_row_index
         while start_row_index >= 0:
             if self.can_place_block(start_row_index, start_col, block):
@@ -73,8 +71,14 @@ class Game:
         return None
 
     def can_place_block(self, start_row: int, start_col: int, block: np.array) -> bool:
-        changed_part_of_board = self.__taken_board[start_row:start_row + block.shape[0], start_col:start_col + block.shape[1]] + block
-        if 2 in changed_part_of_board:
+        end_row = start_row + block.shape[0]
+        end_col = start_col + block.shape[1]
+        if end_row > self.board_height or end_col > self.board_width:
+            print('Cannot place block outside the Board!')
+            return False
+        part_of_board_to_be_changed = self.__taken_board[start_row:end_row, start_col:end_col]
+        changed_part_of_board = part_of_board_to_be_changed + block
+        if 2 in changed_part_of_board:      # the block to be placed overlaps some taken field
             print('Cannot place block here!')
             return False
         else:
@@ -84,6 +88,8 @@ class Game:
     def player_place_block(self, start_col: int, block: np.array) -> bool:
         if self.is_column_index_correct(start_col, block):
             start_row = self.find_start_row(start_col, block)
+            if not start_row:
+                return False
             self.place_block(start_row, start_col, block)
             return True
         else:
@@ -93,7 +99,7 @@ class Game:
         end_row = start_row + block.shape[0]            # this row will not be included (exclusive indexing)
         end_col = start_col + block.shape[1]            # this column will not be included (exclusive indexing)
         self.__taken_board[start_row:end_row, start_col:end_col] += block
-        # TODO add update for self.board ?
+        self.board[start_row:end_row, start_col:end_col] += block
         self.update_column_peaks_row_indexes(start_col, end_col)
 
     def run_game(self):

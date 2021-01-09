@@ -44,8 +44,10 @@ def can_place_block():
         response_json = request.get_json()
         rotation_index = response_json['rotation_index']
         start_column = response_json['start_column']
-        can_place_block = app.game.can_player_place_block(start_column, app.game.current_shape[rotation_index])
-        # socket_io.emit('can_place_block', can_place_block)
+        block_to_be_placed = app.game.current_shape[rotation_index]
+        if app.game.player_place_block(start_column, block_to_be_placed):
+            #next turn # TODO
+            socket_io.emit('board_display', app.game.get_taken_board().tolist())
     return render_template('index.html')
 
 

@@ -65,7 +65,6 @@ function drawBoard(board) {
 }
 
 function drawCurrentBlock(current_block) {
-  console.log(current_block)
   let canvas = document.getElementById('canvas');
   if (canvas.getContext) {
     let ctx = canvas.getContext('2d');

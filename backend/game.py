@@ -36,9 +36,34 @@ class Game:
     def get_board(self) -> np.array:
         return self.board
 
+    def get_taken_board(self) -> np.array:
+        return self.__taken_board
+
+    def is_column_index_correct(self, col_index: int, block: np.array) -> bool:
+        block_width = len(block[0])
+        if col_index + block_width <= self.board_width:
+            return True
+        else:
+            print("{} is incorrect column index (block is {} fields wide and the board's last index is {}."
+                  .format(col_index, block_width, self.board_width - 1))
+            return False
+
+    """Row numbers start from top (row number 0 at top of the displayed board)."""
+    def find_start_row(self, start_col: int, block: np.array) -> int:
+        block_width = len(block[0])
+        block_height = len(block)
+        peaks_of_columns_below_block = self.__column_peaks[start_col:start_col+block_width]
+        initial_start_row_index = self.board_height - max(peaks_of_columns_below_block) - block_height
+        start_row_index = initial_start_row_index
+        while start_row_index >= 0:
+            if self.can_place_block(start_row_index, start_col, block):
+                return start_row_index
+            else:
+                start_row_index -= 1
+        return None
+
     def can_place_block(self, start_row: int, start_col: int, block: np.array) -> bool:
         changed_part_of_board = self.__taken_board[start_row:start_row + block.shape[0], start_col:start_col + block.shape[1]] + block
-        print("Changed part of board:", changed_part_of_board)
         if 2 in changed_part_of_board:
             print('Cannot place block here!')
             return False
@@ -46,20 +71,17 @@ class Game:
             print('Block can be placed here.')
             return True
 
-    def can_player_place_block(self, start_col: int, block: np.array) -> bool:
-        # changed_part_of_board = self.__taken_board[start_row:start_row + block.shape[0], start_col:start_col + block.shape[1]] + block
-        # print("Changed part of board:", changed_part_of_board)
-        # if 2 in changed_part_of_board:
-        #     print('Cannot place block here!')
-        #     return False
-        # else:
-        #     print('Block can be placed here.')
-        #     return True
-        return  # TODO
+    def player_place_block(self, start_col: int, block: np.array) -> bool:
+        if self.is_column_index_correct(start_col, block):
+            start_row = self.find_start_row(start_col, block)
+            self.place_block(start_row, start_col, block)
+            return True
+        else:
+            return False
 
     def place_block(self, start_row: int, start_col: int, block: np.array):
         self.__taken_board[start_row:start_row + block.shape[0], start_col:start_col + block.shape[1]] += block
-        # TODO add for self.board ?
+        # TODO add update for self.board ?
 
     def run_game(self):
         print('in run_game')

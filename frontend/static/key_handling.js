@@ -4,11 +4,11 @@ window.addEventListener("keydown", function(event) {
   }
 
   switch(event.code) {
-    case "KeyR":
-      rotateCurrentBlockClockwise();
+    case "KeyQ":
+      rotateCurrentBlockCounterclockwise();
       break;
     case "KeyE":
-      rotateCurrentBlockCounterclockwise();
+      rotateCurrentBlockClockwise();
       break;
     case "KeyP":
       rejectCurrentBlock();
@@ -25,6 +25,9 @@ window.addEventListener("keydown", function(event) {
     case "ArrowDown":
     case "Space":
       placeCurrentBlock();
+      break;
+    case "Backspace":
+      restartGame();
       break;
   }
 

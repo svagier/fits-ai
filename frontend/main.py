@@ -66,6 +66,16 @@ def start_game():
     return render_template('index.html')
 
 
+@app.route('/restart_game', methods=['POST'])
+def restart_game():
+    if request.method == 'POST':
+        app.game = Game()
+        board = app.game.get_board()
+        socket_io.emit('board_display', board.tolist())
+        next_turn()
+    return render_template('index.html')
+
+
 def next_turn():
     turn_dict = app.game.next_turn()
     # if turn_dict['is_finish']:

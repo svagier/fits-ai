@@ -206,6 +206,10 @@ function clearContainerForCurrentBlock(ctx) {
   ctx.clearRect(0, 0, ctx.canvas.width, container_height_for_current_block);
 }
 
+function restartGame() {
+  $.post("/restart_game")
+}
+
 function startGame() {
   $.post("/start_game")
 }

@@ -1,3 +1,4 @@
+import copy
 import random
 
 import numpy as np
@@ -7,12 +8,13 @@ from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 
 
 class Game:
-    def __init__(self, board: [np.array] = BOARD_1):
-        self.remaining_shapes_dict = ALL_SHAPES_DICT
-        self.board = board
-        self.__initial_board = board
-        self.board_height = board.shape[0]
-        self.board_width = board.shape[1]
+    def __init__(self):     # TODO add board param?
+        self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
+        self.board = copy.deepcopy(BOARD_1)     # TODO
+        # np.copyto(self.board, BOARD_1)      # TODO improve
+        self.__initial_board = self.board
+        self.board_height = self.board.shape[0]
+        self.board_width = self.board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
         self.current_shape = None

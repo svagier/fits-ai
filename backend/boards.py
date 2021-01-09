@@ -1,9 +1,11 @@
 from enum import Enum
 
+import numpy as np
 
-class Field(Enum):
+
+class FieldType(Enum):
     EMPTY = 0
-    TAKEN = 1
+    TAKEN = 1       # this should always be 1!
     EXTRA_EMPTY = 2
     PLUS_1 = 3
     PLUS_2 = 4
@@ -16,8 +18,8 @@ class Field(Enum):
     PAIR_5 = 11
 
 
-EMPTY = Field.EMPTY.value
-EXTRA_EMPTY = Field.EXTRA_EMPTY.value
+EMPTY = FieldType.EMPTY.value
+EXTRA_EMPTY = FieldType.EXTRA_EMPTY.value
 
 """
 Each Board is 12 Fields high and 6 Fields wide.
@@ -26,7 +28,7 @@ points are given for filling EXTRA_EMPTY Fields. There are 3 rows of EXTRA_EMPTY
 the game are 4 Fields high, and there is no point in placing Block solely on EXTRA_EMPTY Fields (there will be no points
 for that).
 """
-BOARD_1 = \
+BOARD_1 = np.array(
     [
         [EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY],
         [EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY, EXTRA_EMPTY],
@@ -43,5 +45,5 @@ BOARD_1 = \
         [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
-    ]
+    ])
 

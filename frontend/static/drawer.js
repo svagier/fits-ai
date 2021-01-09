@@ -1,12 +1,15 @@
-let container_height_for_current_block;
-let field_offset;
-let field_size;
-let tallest_block_height;
+let number_of_columns;
+let container_height_for_current_block;     // in px
+let field_offset;     // in px
+let field_size;     // in px
+let tallest_block_height;   // in fields
 let current_block_with_rotations;
 let current_rotation;
+let current_block_start_column;
+let current_block_width;    // in fields
 const socketio = io();
 
-// TODO add getting field_colors to Field Enum from backend
+// TODO add getting field_colors to FieldType Enum from backend
 let field_colors = new Map()
 field_colors.set(0, 'grey')   // EMPTY
 field_colors.set(1, '#2B252C')   // TAKEN
@@ -19,10 +22,12 @@ function setup() {
 }
 
 socketio.on('game_setup', (setup_data) => {
+  number_of_columns = setup_data['number_of_columns']
   field_size = setup_data['field_size']
   field_offset = setup_data['field_offset']
   tallest_block_height = setup_data['tallest_block_height']
   container_height_for_current_block = field_size * tallest_block_height + (tallest_block_height - 1) * field_offset
+  current_block_start_column = 0
 })
 
 socketio.on('board_display', (board) => {
@@ -31,9 +36,11 @@ socketio.on('board_display', (board) => {
   });
 })
 
-socketio.on('current_block', (current_block_rotations) => {
+socketio.on('current_shape', (current_block_rotations) => {
   current_block_with_rotations = current_block_rotations;
   current_rotation = 0;
+  current_block_start_column = 0;
+  current_block_width = current_block_with_rotations[current_rotation][0].length
   drawCurrentBlock(current_block_rotations[current_rotation])
 })
 
@@ -58,7 +65,6 @@ function drawBoard(board) {
 }
 
 function drawCurrentBlock(current_block) {
-  console.log(current_block)
   let canvas = document.getElementById('canvas');
   if (canvas.getContext) {
     let ctx = canvas.getContext('2d');
@@ -66,7 +72,7 @@ function drawCurrentBlock(current_block) {
     ctx.fillStyle = 'green';
     let row_number = 0
     current_block.forEach(row => {
-      let column_number = 0
+      let column_number = current_block_start_column
       row.forEach(field => {
         if (field) {
           const x_pos = column_number * field_size  + column_number * field_offset
@@ -85,6 +91,8 @@ function rotateCurrentBlockClockwise() {
   if (current_rotation === current_block_with_rotations.length) {
     current_rotation = 0;
   }
+  current_block_width = current_block_with_rotations[current_rotation][0].length
+  current_block_start_column = 0
   drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
 
@@ -93,8 +101,43 @@ function rotateCurrentBlockCounterclockwise() {
   if (current_rotation === -1) {
     current_rotation = current_block_with_rotations.length - 1;
   }
+  current_block_width = current_block_with_rotations[current_rotation][0].length
+  current_block_start_column = 0
   drawCurrentBlock(current_block_with_rotations[current_rotation]);
 }
+
+function moveCurrentBlockLeft() {
+  current_block_start_column -= 1;
+  if (current_block_start_column <= -1) {
+    current_block_start_column = number_of_columns - current_block_width;
+  }
+  drawCurrentBlock(current_block_with_rotations[current_rotation]);
+}
+
+function moveCurrentBlockRight() {
+  current_block_start_column += 1;
+  if (current_block_start_column > number_of_columns - current_block_width) {
+    current_block_start_column = 0;
+  }
+  drawCurrentBlock(current_block_with_rotations[current_rotation]);
+}
+
+function placeCurrentBlock() {
+  let data = {"rotation_index": current_rotation, "start_column": current_block_start_column};
+  $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      url: '/can_place_block',
+      dataType : 'json',
+      data : JSON.stringify(data),
+      success : function(result) {
+        jQuery("#clash").html(result);
+      },error : function(result){
+         console.log(result);
+      }
+  });
+}
+
 
 function clearContainerForCurrentBlock(ctx) {
   ctx.clearRect(0, 0, ctx.canvas.width, container_height_for_current_block);

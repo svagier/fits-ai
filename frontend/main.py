@@ -21,6 +21,7 @@ def index():
 def game_setup():
     if request.method == 'POST':
         game_data = {
+            "number_of_columns": app.game.board_width,
             "field_size": 20,
             "field_offset": 2,
             "tallest_block_height": 4  # TODO add dynamic

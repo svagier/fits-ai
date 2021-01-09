@@ -10,6 +10,14 @@ window.addEventListener("keydown", function(event) {
     case "KeyE":
       rotateCurrentBlockCounterclockwise();
       break;
+    case "KeyA":
+    case "ArrowLeft":
+      moveCurrentBlockLeft();
+      break;
+    case "KeyD":
+    case "ArrowRight":
+      moveCurrentBlockRight();
+      break;
   }
 
   // Consume the event so it doesn't get handled twice      // commented out since Ctrl+F5 didn't work

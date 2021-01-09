@@ -11,10 +11,10 @@ class Game:
         self.all_shapes = ALL_SHAPES
         self.board = board
         self.__initial_board = board
-        self.__board_height = board.shape[0]
-        self.__board_width = board.shape[1]
-        self.__taken_board = np.zeros((self.__board_height, self.__board_width), dtype=int)
-        self.__column_peaks = np.zeros((self.__board_width,), dtype=int)
+        self.board_height = board.shape[0]
+        self.board_width = board.shape[1]
+        self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
+        self.__column_peaks = np.zeros((self.board_width,), dtype=int)
 
     def print_shapes(self):
         for list_of_rotations in self.all_shapes:

@@ -13,16 +13,19 @@
 
 
 </head>
-<body style="background-color: #232744;" onload="setup()">
+<body onload="setup()">
     <div class="container">
         <div class="row mt-5">
             <div class="col">
-                <canvas id="canvas" width="400" height="800"></canvas>
+                <canvas id="canvas" width="400" height="500"></canvas>
+                <div class="row score-container">
+                    <span>Current score:</span>
+                    <span id="currentScoreDisplay" class="col"></span>
+                </div>
             </div>
             <div class="col">
                 <div id="allRemainingShapesContainer" class="all-remaining-shapes-container">
                 </div>
-
             </div>
         </div>
     </div>

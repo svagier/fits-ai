@@ -1,4 +1,13 @@
+body {
+    background-color: #232744;
+    color: whitesmoke;
+}
+
 .all-remaining-shapes-container {
     display: flex;
     flex-wrap: wrap;
+}
+
+.score-container {
+    font-size: 2rem;
 }

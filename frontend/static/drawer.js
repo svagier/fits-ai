@@ -85,8 +85,13 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
           row_number += 1
         });
       }
-
     });
+  });
+})
+
+socketio.on('display_score', (score) => {
+  $(document).ready(function () {
+    $('#currentScoreDisplay').text(score);
   });
 })
 

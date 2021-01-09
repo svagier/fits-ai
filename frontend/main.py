@@ -74,6 +74,8 @@ def next_turn():
         socket_io.emit('current_shape', turn_dict['new_shape'])
     if 'remaining_shapes' in turn_dict.keys() and turn_dict['remaining_shapes']:
         socket_io.emit('remaining_shapes', turn_dict['remaining_shapes'])
+    score = app.game.calculate_total_score()
+    socket_io.emit('display_score', score)
 
 # def run_game_and_send_to_front():
 #     for turn_dict in app.game.run_game():

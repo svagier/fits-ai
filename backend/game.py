@@ -126,14 +126,24 @@ class Game:
         self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)
 
+    """TODO add comment that id returns only serializable data, so np.arrays are converted to lists"""
     def next_turn(self) -> dict:
         new_shape = self.get_random_shape()
+        if new_shape:
+            new_shape_list = [nparray.tolist() for nparray in new_shape]
+        else:
+            new_shape_list = None
+        if self.remaining_shapes:
+            remaining_shapes_list = [nparray[0].tolist() for nparray in self.remaining_shapes]
+        else:
+            remaining_shapes_list = None
         if not self.is_finish:
             self.turn_number += 1
         data = {
             "turn_number": self.turn_number,
             "is_finish": self.is_finish,
             "score": 0,     #TODO
-            "new_shape": new_shape
+            "new_shape":  new_shape_list,
+            "remaining_shapes": remaining_shapes_list
         }
         return data

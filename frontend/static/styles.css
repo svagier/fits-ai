@@ -1,0 +1,4 @@
+.all-remaining-shapes-container {
+    display: flex;
+    flex-wrap: wrap;
+}

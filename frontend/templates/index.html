@@ -5,6 +5,7 @@
     <title>FITS</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.js" integrity="sha512-2rUSTSAeOO02jF6eBqENNqPs1EohenJ5j+1dgDPdXSLz9nOlrr8DJk4zW/lDy8rjhGCSonW3Gx812XJQIKZKJQ==" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='drawer.js') }}"></script>
@@ -14,9 +15,14 @@
 </head>
 <body style="background-color: #232744;" onload="setup()">
     <div class="container">
-        <div class="row">
-            <div class="col mt-5">
-                <canvas id="canvas" width="800" height="800"></canvas>
+        <div class="row mt-5">
+            <div class="col">
+                <canvas id="canvas" width="400" height="800"></canvas>
+            </div>
+            <div class="col">
+                <div id="allRemainingShapesContainer" class="all-remaining-shapes-container">
+                </div>
+
             </div>
         </div>
     </div>

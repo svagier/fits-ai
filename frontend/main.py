@@ -17,14 +17,15 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/game_setup', methods=['GET', 'POST'])
+@app.route('/game_setup', methods=['POST'])
 def game_setup():
     if request.method == 'POST':
         game_data = {
             "number_of_columns": app.game.board_width,
             "field_size": 20,
             "field_offset": 2,
-            "tallest_block_height": 4  # TODO add dynamic
+            "tallest_block_height": 4,  # TODO add dynamic
+            "widest_block_width": 4     # TODO add dynamic
         }
         socket_io.emit('game_setup', game_data)
     return render_template('index.html')
@@ -69,8 +70,11 @@ def next_turn():
     turn_dict = app.game.next_turn()
     # if turn_dict['is_finish']:
         # TODO
-    if turn_dict['new_shape']:
-        socket_io.emit('current_shape', [nparray.tolist() for nparray in turn_dict['new_shape']])
+    if 'new_shape' in turn_dict.keys() and turn_dict['new_shape']:
+        socket_io.emit('current_shape', turn_dict['new_shape'])
+    if 'remaining_shapes' in turn_dict.keys() and turn_dict['remaining_shapes']:
+        socket_io.emit('remaining_shapes', turn_dict['remaining_shapes'])
+
 # def run_game_and_send_to_front():
 #     for turn_dict in app.game.run_game():
 #         socket_io.emit('current_shape', [nparray.tolist() for nparray in turn_dict['current_shape']])

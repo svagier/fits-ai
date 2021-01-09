@@ -60,32 +60,34 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
   $(document).ready(function () {
     let $all_remaining_shapes_container = $('#allRemainingShapesContainer');
     $all_remaining_shapes_container.empty();
-    list_of_remaining_shapes.forEach(function callback(shape, index) {
-      let shape_container_id = 'remainingShapeContainer' + index
-      $all_remaining_shapes_container.append('<div id="' + (shape_container_id) + '" class="remaining-shape-container"></div>')
-      let $shape_container = $('#' + shape_container_id);
-      let canvas_id = 'remainingShapeCanvas' + index
-      $shape_container.append('<canvas id="' + (canvas_id) + '" width="100" height="100"></canvas>')
+    if (list_of_remaining_shapes) {
+      list_of_remaining_shapes.forEach(function callback(shape, index) {
+        let shape_container_id = 'remainingShapeContainer' + index
+        $all_remaining_shapes_container.append('<div id="' + (shape_container_id) + '" class="remaining-shape-container"></div>')
+        let $shape_container = $('#' + shape_container_id);
+        let canvas_id = 'remainingShapeCanvas' + index
+        $shape_container.append('<canvas id="' + (canvas_id) + '" width="100" height="100"></canvas>')
 
-      let canvas = document.getElementById(canvas_id);
-      if (canvas.getContext) {
-        let ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'green';
-        let row_number = 0
-        shape.forEach(row => {
-          let column_number = 0
-          row.forEach(field => {
-            if (field) {
-              const x_pos = column_number * field_size  + column_number * field_offset
-              const y_pos = row_number * field_size + row_number * field_offset
-              ctx.fillRect(x_pos, y_pos, field_size, field_size);
-            }
-            column_number += 1
+        let canvas = document.getElementById(canvas_id);
+        if (canvas.getContext) {
+          let ctx = canvas.getContext('2d');
+          ctx.fillStyle = 'green';
+          let row_number = 0
+          shape.forEach(row => {
+            let column_number = 0
+            row.forEach(field => {
+              if (field) {
+                const x_pos = column_number * field_size  + column_number * field_offset
+                const y_pos = row_number * field_size + row_number * field_offset
+                ctx.fillRect(x_pos, y_pos, field_size, field_size);
+              }
+              column_number += 1
+            });
+            row_number += 1
           });
-          row_number += 1
-        });
-      }
-    });
+        }
+      });
+    }
   });
 })
 

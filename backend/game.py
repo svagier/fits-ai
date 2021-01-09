@@ -59,20 +59,25 @@ class Game:
 
     """Row numbers start from top (row number 0 at top of the displayed board)."""
     def find_start_row(self, start_col: int, block: np.array) -> int:
-        block_width = len(block[0])
+        block_height, block_width = block.shape
         peaks_of_columns_below_block = self.__column_peaks_row_indexes[start_col:start_col+block_width]
-        initial_start_row_index = min(peaks_of_columns_below_block)
+        highest_column_index = min(peaks_of_columns_below_block)
+        shortest_column_index = max(peaks_of_columns_below_block)
+        initial_start_row_index = highest_column_index - block_height + 1
+        if not self.can_place_block(initial_start_row_index, start_col, block):
+            raise Exception     # TODO test this edge case, add descripion to function
         start_row_index = initial_start_row_index
-        while start_row_index >= 0:
-            if self.can_place_block(start_row_index, start_col, block):
-                return start_row_index
+        while start_row_index <= shortest_column_index:
+            if not self.can_place_block(start_row_index, start_col, block):
+                return start_row_index - 1
             else:
-                start_row_index -= 1
+                start_row_index += 1
         return None
 
     def can_place_block(self, start_row: int, start_col: int, block: np.array) -> bool:
-        end_row = start_row + block.shape[0]
-        end_col = start_col + block.shape[1]
+        block_height, block_width = block.shape
+        end_row = start_row + block_height
+        end_col = start_col + block_width
         if end_row > self.board_height or end_col > self.board_width:
             print('Cannot place block outside the Board!')
             return False
@@ -113,8 +118,9 @@ class Game:
                                         '(update_main_board).')     # for DEBUG, need to comment out later TODO
 
     def place_block(self, start_row: int, start_col: int, block: np.array):
-        end_row = start_row + block.shape[0]            # this row will not be included (exclusive indexing)
-        end_col = start_col + block.shape[1]            # this column will not be included (exclusive indexing)
+        block_height, block_width = block.shape
+        end_row = start_row + block_height            # this row will not be included (exclusive indexing)
+        end_col = start_col + block_width             # this column will not be included (exclusive indexing)
         self.update_taken_board(start_row, end_row, start_col, end_col, block)
         self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)

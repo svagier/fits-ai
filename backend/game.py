@@ -3,12 +3,12 @@ import random
 import numpy as np
 
 from backend.boards import BOARD_1, FieldType
-from backend.shapes import ALL_SHAPES
+from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 
 
 class Game:
     def __init__(self, board: [np.array] = BOARD_1):
-        self.remaining_shapes = ALL_SHAPES
+        self.remaining_shapes_dict = ALL_SHAPES_DICT
         self.board = board
         self.__initial_board = board
         self.board_height = board.shape[0]
@@ -20,12 +20,16 @@ class Game:
         self.is_finish = False
 
     def get_random_shape(self):
-        number_of_remaining_shapes = len(self.remaining_shapes)
+        number_of_remaining_shapes = len(self.remaining_shapes_dict)
         if number_of_remaining_shapes == 0:
             self.is_finish = True
             return
-        random_index = random.randrange(0, number_of_remaining_shapes)
-        self.current_shape = self.remaining_shapes.pop(random_index)
+        if self.turn_number == 0:
+            random_shape_name = random.choice(NAMES_OF_INITIAL_SHAPES)
+        else:
+            random_index = random.randrange(0, number_of_remaining_shapes)
+            random_shape_name = list(self.remaining_shapes_dict.keys())[random_index]
+        self.current_shape = self.remaining_shapes_dict.pop(random_shape_name)
         return self.current_shape
 
     def get_board(self) -> np.array:
@@ -133,8 +137,8 @@ class Game:
             new_shape_list = [nparray.tolist() for nparray in new_shape]
         else:
             new_shape_list = None
-        if self.remaining_shapes:
-            remaining_shapes_list = [nparray[0].tolist() for nparray in self.remaining_shapes]
+        if self.remaining_shapes_dict:
+            remaining_shapes_list = [nparray[0].tolist() for nparray in list(self.remaining_shapes_dict.values())]
         else:
             remaining_shapes_list = None
         if not self.is_finish:

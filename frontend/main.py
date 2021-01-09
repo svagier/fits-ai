@@ -46,8 +46,8 @@ def can_place_block():
         start_column = response_json['start_column']
         block_to_be_placed = app.game.current_shape[rotation_index]
         if app.game.player_place_block(start_column, block_to_be_placed):
-            #next turn # TODO
             socket_io.emit('board_display', app.game.get_board().tolist())
+            next_turn()
     return render_template('index.html')
 
 
@@ -55,14 +55,20 @@ def can_place_block():
 def start_game():
     if request.method == 'POST':
         app.game = Game()
-        run_game_and_send_to_front()
+        next_turn()
     return render_template('index.html')
 
 
-def run_game_and_send_to_front():
-    for turn_dict in app.game.run_game():
-        socket_io.emit('current_shape', [nparray.tolist() for nparray in turn_dict['current_shape']])
-        # print('turn_data', turn_dict)
+def next_turn():
+    turn_dict = app.game.next_turn()
+    # if turn_dict['is_finish']:
+        # TODO
+    if turn_dict['new_shape']:
+        socket_io.emit('current_shape', [nparray.tolist() for nparray in turn_dict['new_shape']])
+# def run_game_and_send_to_front():
+#     for turn_dict in app.game.run_game():
+#         socket_io.emit('current_shape', [nparray.tolist() for nparray in turn_dict['current_shape']])
+#         # print('turn_data', turn_dict)
 
 
 if __name__ == '__main__':

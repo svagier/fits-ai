@@ -8,7 +8,7 @@ from backend.shapes import ALL_SHAPES
 
 class Game:
     def __init__(self, board: [np.array] = BOARD_1):
-        self.all_shapes = ALL_SHAPES
+        self.remaining_shapes = ALL_SHAPES
         self.board = board
         self.__initial_board = board
         self.board_height = board.shape[0]
@@ -16,22 +16,17 @@ class Game:
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
         self.current_shape = None
-
-    def print_shapes(self):
-        for list_of_rotations in self.all_shapes:
-            print('\n\n Shape:', end='')
-            for rotated_shape in list_of_rotations:
-                print()
-                for row_list in rotated_shape:
-                    print()
-                    for elem in row_list:
-                        if elem:
-                            print('*', end='')
-                        else:
-                            print(' ', end='')
+        self.turn_number = 0
+        self.is_finish = False
 
     def get_random_shape(self):
-        return random.choice(self.all_shapes)
+        number_of_remaining_shapes = len(self.remaining_shapes)
+        if number_of_remaining_shapes == 0:
+            self.is_finish = True
+            return
+        random_index = random.randrange(0, number_of_remaining_shapes)
+        self.current_shape = self.remaining_shapes.pop(random_index)
+        return self.current_shape
 
     def get_board(self) -> np.array:
         return self.board
@@ -131,19 +126,14 @@ class Game:
         self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)
 
-    def run_game(self):
-        print('in run_game')
-        run = True
-        while run:
-            self.current_shape = self.get_random_shape()
-            yield {'current_shape': self.current_shape}
-            run = False
-
-
-#
-# def main():
-#     print_shapes()
-#
-#
-# if __name__ == "__main__":
-#     main()
+    def next_turn(self) -> dict:
+        new_shape = self.get_random_shape()
+        if not self.is_finish:
+            self.turn_number += 1
+        data = {
+            "turn_number": self.turn_number,
+            "is_finish": self.is_finish,
+            "score": 0,     #TODO
+            "new_shape": new_shape
+        }
+        return data

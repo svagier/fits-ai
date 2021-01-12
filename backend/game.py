@@ -244,3 +244,26 @@ class Game:
             elif number_of_uncovered_pair_fields == 1:
                 total_score -= 3
         return total_score
+
+    def get_extra_current_stats(self) -> dict:
+        current_shape_fields_taken = int(np.sum(self.current_shape[0]))
+        remaining_shapes_fields_taken = 0
+        for shape in self.remaining_shapes_dict.values():
+            remaining_shapes_fields_taken += int(np.sum(shape[0]))
+        all_empty_remaining_fields = 0
+        empty_unreachable_fields = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                if self.__initial_board[row_index, col_index] != FieldType.EXTRA_EMPTY.value:
+                    if col_value == 0:
+                        all_empty_remaining_fields += 1
+                        if row_index > 0:
+                            if self.__taken_board[row_index - 1, col_index] == 1:
+                                empty_unreachable_fields += 1
+
+        return {
+            "taken_fields_in_current_shape": current_shape_fields_taken,
+            "taken_fields_in_remaining_shapes_without_current": remaining_shapes_fields_taken,
+            "all_empty_reachable_fields": all_empty_remaining_fields - empty_unreachable_fields,
+            "empty_unreachable_fields": empty_unreachable_fields
+        }

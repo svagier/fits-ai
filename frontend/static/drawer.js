@@ -121,6 +121,17 @@ socketio.on('finished_game', (final_score) => {
   });
 })
 
+socketio.on('extra_current_stats', (extra_current_stats) => {
+  $(document).ready(function () {
+    $('#extraCurrentStats #takenFieldsInCurrentShape').text(extra_current_stats.taken_fields_in_current_shape);
+    $('#extraCurrentStats #takenFieldsInOtherRemainingShapes').text(extra_current_stats.taken_fields_in_remaining_shapes_without_current);
+    $('#extraCurrentStats #allUnreachableEmptyFields').text(extra_current_stats.empty_unreachable_fields);
+    $('#extraCurrentStats #allRemainingReachableEmptyFields').text(extra_current_stats.all_empty_reachable_fields);
+
+  });
+})
+
+
 function closeFinishedGameModal() {
    $('#finishedGameModal').modal('toggle');
 }

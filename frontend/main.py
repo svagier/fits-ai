@@ -81,6 +81,7 @@ def restart_game():
 
 def next_turn():
     turn_dict = app.game.next_turn()
+    socket_io.emit('extra_current_stats', app.game.get_extra_current_stats())
     if turn_dict['is_finish']:
         final_score = app.game.calculate_total_score()
         socket_io.emit('finished_game', final_score)

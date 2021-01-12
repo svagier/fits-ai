@@ -98,6 +98,8 @@ class Game:
             return True
 
     def player_place_block(self, start_col: int, block: np.array) -> bool:
+        if self.is_finish:
+            return False
         if self.is_column_index_correct(start_col, block):
             start_row = self.find_start_row(start_col, block)
             if start_row is None:
@@ -134,17 +136,18 @@ class Game:
 
     """TODO add comment that id returns only serializable data, so np.arrays are converted to lists"""
     def next_turn(self) -> dict:
-        new_shape = self.get_random_shape()
-        if new_shape:
-            new_shape_list = [nparray.tolist() for nparray in new_shape]
-        else:
-            new_shape_list = None
-        if self.remaining_shapes_dict:
-            remaining_shapes_list = [nparray[0].tolist() for nparray in list(self.remaining_shapes_dict.values())]
-        else:
-            remaining_shapes_list = None
+        new_shape_list = None
+        remaining_shapes_list = None
         if not self.is_finish:
             self.turn_number += 1
+            new_shape = self.get_random_shape()
+            if new_shape:
+                new_shape_list = [nparray.tolist() for nparray in new_shape]
+            if self.remaining_shapes_dict:
+                remaining_shapes_list = [nparray[0].tolist() for nparray in list(self.remaining_shapes_dict.values())]
+            else:
+                remaining_shapes_list = None
+
         data = {
             "turn_number": self.turn_number,
             "is_finish": self.is_finish,

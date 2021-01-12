@@ -56,7 +56,6 @@ socketio.on('current_shape', (current_block_rotations) => {
 })
 
 socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
-  console.log(list_of_remaining_shapes)
   $(document).ready(function () {
     let $all_remaining_shapes_container = $('#allRemainingShapesContainer');
     $all_remaining_shapes_container.empty();
@@ -96,6 +95,24 @@ socketio.on('display_score', (score) => {
     $('#currentScoreDisplay').text(score);
   });
 })
+
+socketio.on('finished_game', (final_score) => {
+  $(document).ready(function () {
+    let canvas = document.getElementById('canvas');
+    if (canvas.getContext) {
+      let ctx = canvas.getContext('2d');
+      clearContainerForCurrentBlock(ctx);
+    }
+    current_block_with_rotations = null;
+    $('#currentScoreDisplay').text(final_score);
+    $('#finalScore').text(final_score);
+    $('#finishedGameModal').modal('show')
+  });
+})
+
+function closeFinishedGameModal() {
+   $('#finishedGameModal').modal('toggle');
+}
 
 function drawBoard(board) {
   let canvas = document.getElementById('canvas');

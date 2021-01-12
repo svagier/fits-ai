@@ -42,13 +42,14 @@ def show_board():
 @app.route('/can_place_block', methods=['POST'])
 def can_place_block():
     if request.method == 'POST':
-        response_json = request.get_json()
-        rotation_index = response_json['rotation_index']
-        start_column = response_json['start_column']
-        block_to_be_placed = app.game.current_shape[rotation_index]
-        if app.game.player_place_block(start_column, block_to_be_placed):
-            socket_io.emit('board_display', app.game.get_board().tolist())
-            next_turn()
+        if not app.game.is_finish:
+            response_json = request.get_json()
+            rotation_index = response_json['rotation_index']
+            start_column = response_json['start_column']
+            block_to_be_placed = app.game.current_shape[rotation_index]
+            if app.game.player_place_block(start_column, block_to_be_placed):
+                socket_io.emit('board_display', app.game.get_board().tolist())
+                next_turn()
     return render_template('index.html')
 
 
@@ -78,14 +79,16 @@ def restart_game():
 
 def next_turn():
     turn_dict = app.game.next_turn()
-    # if turn_dict['is_finish']:
-        # TODO
-    if 'new_shape' in turn_dict.keys():
-        socket_io.emit('current_shape', turn_dict['new_shape'])
-    if 'remaining_shapes' in turn_dict.keys():
-        socket_io.emit('remaining_shapes', turn_dict['remaining_shapes'])
-    score = app.game.calculate_total_score()
-    socket_io.emit('display_score', score)
+    if turn_dict['is_finish']:
+        final_score = app.game.calculate_total_score()
+        socket_io.emit('finished_game', final_score)
+    else:
+        if 'new_shape' in turn_dict.keys():
+            socket_io.emit('current_shape', turn_dict['new_shape'])
+        if 'remaining_shapes' in turn_dict.keys():
+            socket_io.emit('remaining_shapes', turn_dict['remaining_shapes'])
+        score = app.game.calculate_total_score()
+        socket_io.emit('display_score', score)
 
 # def run_game_and_send_to_front():
 #     for turn_dict in app.game.run_game():

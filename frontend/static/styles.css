@@ -11,3 +11,7 @@ body {
 .score-container {
     font-size: 2rem;
 }
+
+.modal {
+    color: black;
+}

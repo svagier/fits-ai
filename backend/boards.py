@@ -17,6 +17,8 @@ class FieldType(Enum):
     PAIR_5 = 11
 
 
+PAIRS_FIELDS = [FieldType.PAIR_1.value, FieldType.PAIR_2.value, FieldType.PAIR_3.value, FieldType.PAIR_4.value, FieldType.PAIR_5.value]
+
 # rewritten below so that there is no need to write 'FieldType.' and '.value' every time, so below boards are readable
 EMPTY = FieldType.EMPTY.value
 EXTRA_EMPTY = FieldType.EXTRA_EMPTY.value

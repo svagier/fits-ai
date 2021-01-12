@@ -3,7 +3,7 @@ import random
 
 import numpy as np
 
-from backend.boards import BOARD_1, BOARD_2, BOARD_3, BOARD_4, FieldType
+from backend.boards import BOARD_1, BOARD_2, BOARD_3, BOARD_4, FieldType, PAIRS_FIELDS
 from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 
 
@@ -164,17 +164,54 @@ class Game:
         }
         return data
 
-    # """ TODO RESEARCH AND TEST THOSE POINTS!"""
     def calculate_total_score(self) -> int:
+        if self.board_number == 1:
+            return self.calculate_total_score_board_1()
+        elif self.board_number == 2:
+            return self.calculate_total_score_board_2()
+        elif self.board_number == 3:
+            return self.calculate_total_score_board_3()
+        elif self.board_number == 4:
+            return self.calculate_total_score_board_4()
+        else:
+            return Exception ('Board numbers should be in range <1; 4>!')
+
+    def calculate_total_score_board_1(self) -> int:
         total_score = 0
         for row_index, row_value in enumerate(self.__taken_board):
             row_completed = True
             for col_index, col_value in enumerate(row_value):
                 initial_field_value = self.__initial_board[row_index, col_index]
-                # if col_value == 1:
-                #     if initial_field_value == FieldType.EMPTY.value:
                 if col_value == 0:
                     row_completed = False
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+            if row_completed:
+                total_score += 1
+        return total_score
+
+    def calculate_total_score_board_2(self) -> int:
+        total_score = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+                    elif initial_field_value == FieldType.PLUS_1.value:
+                        total_score += 1
+                    elif initial_field_value == FieldType.PLUS_2.value:
+                        total_score += 2
+                    elif initial_field_value == FieldType.PLUS_3.value:
+                        total_score += 3
+        return total_score
+
+    def calculate_total_score_board_3(self) -> int:
+        total_score = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
                     if initial_field_value == FieldType.EMPTY.value:
                         total_score -= 1
                     elif initial_field_value == FieldType.MINUS_5.value:
@@ -185,7 +222,24 @@ class Game:
                         total_score += 2
                     elif initial_field_value == FieldType.PLUS_3.value:
                         total_score += 3
-                    # TODO add handling for other special fields
-            if row_completed:
-                total_score += 1
+        return total_score
+
+    def calculate_total_score_board_4(self) -> int:
+        total_score = 0
+        pair_fields_uncovered = {}
+        for pair_field_type in PAIRS_FIELDS:
+            pair_fields_uncovered[pair_field_type] = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+                    elif initial_field_value in PAIRS_FIELDS:
+                        pair_fields_uncovered[initial_field_value] += 1
+        for number_of_uncovered_pair_fields in pair_fields_uncovered.values():
+            if number_of_uncovered_pair_fields == 2:
+                total_score += 3
+            elif number_of_uncovered_pair_fields == 1:
+                total_score -= 3
         return total_score

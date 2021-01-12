@@ -18,6 +18,7 @@ class Game:
             self.board = copy.deepcopy(BOARD_2)
         else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
             self.board = copy.deepcopy(BOARD_1)
+        self.names_of_initial_shapes = copy.deepcopy(NAMES_OF_INITIAL_SHAPES)
         self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
         self.__initial_board = copy.deepcopy(self.board)
         self.board_height = self.board.shape[0]
@@ -25,7 +26,7 @@ class Game:
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
         self.current_shape = None
-        self.turn_number = 0
+        self.turn_number = 0         # 0 means that the game has not started yet. Number of the first turn when move is possible is 1. It will be incremented to 1 in next_turn()
         self.is_finish = False
 
     def get_random_shape(self):
@@ -33,8 +34,8 @@ class Game:
         if number_of_remaining_shapes == 0:
             self.is_finish = True
             return
-        if self.turn_number == 0:
-            random_shape_name = random.choice(NAMES_OF_INITIAL_SHAPES)
+        if self.turn_number == 1:       # first turn number is 1
+            random_shape_name = random.choice(self.names_of_initial_shapes)
         else:
             random_index = random.randrange(0, number_of_remaining_shapes)
             random_shape_name = list(self.remaining_shapes_dict.keys())[random_index]

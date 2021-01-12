@@ -10,11 +10,22 @@ let current_block_start_column;
 let current_block_width;    // in fields
 const socketio = io();
 
-// TODO add getting field_colors to FieldType Enum from backend
-let field_colors = new Map()
-field_colors.set(0, 'grey')   // EMPTY
-field_colors.set(1, '#2B252C')   // TAKEN
-field_colors.set(2, '#232744')   // EXTRA_EMPTY     // TODO add getting it from background
+// TODO add getting field_display_data to FieldType Enum from backend
+let field_display_data = new Map()
+field_display_data.set(0, {'background_color': 'grey', 'text_color': null, 'text': null})   // EMPTY
+field_display_data.set(1, {'background_color': '#2B252C', 'text_color': null, 'text': null})   // TAKEN
+field_display_data.set(2, {'background_color': '#232744', 'text_color': null, 'text': null})   // EXTRA_EMPTY
+field_display_data.set(3, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+1'})   // PLUS_1
+field_display_data.set(4, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+2'})   // PLUS_2
+field_display_data.set(5, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+3'})   // PLUS_3
+field_display_data.set(6, {'background_color': 'black', 'text_color': 'red', 'text': '-5'})   // MINUS_5
+
+// field_display_data.set(7, 'black')   // PAIR_1
+// field_display_data.set(8, 'black')   // PAIR_2
+// field_display_data.set(9, 'black')   // PAIR_3
+// field_display_data.set(10, 'black')   // PAIR_4
+// field_display_data.set(11, 'black')   // PAIR_5
+
 
 function setup() {
   $.post("/game_setup")
@@ -122,10 +133,11 @@ function drawBoard(board) {
     board.forEach(row => {
       let column_number = 0
       row.forEach(field => {
-        ctx.fillStyle = field_colors.get(field);
+        ctx.fillStyle = field_display_data.get(field)['background_color'];
         const x_pos = column_number * field_size  + column_number * field_offset
         const y_pos = container_height_for_current_block + row_number * field_size + row_number * field_offset
         ctx.fillRect(x_pos, y_pos, field_size, field_size);
+
         column_number += 1
       });
       row_number += 1

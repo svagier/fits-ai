@@ -62,7 +62,8 @@ def reject_current_block():
 @app.route('/start_game', methods=['POST'])
 def start_game():
     if request.method == 'POST':
-        app.game = Game()
+        current_board_number = app.game.board_number
+        app.game = Game(current_board_number)
         next_turn()
     return render_template('index.html')
 
@@ -70,7 +71,8 @@ def start_game():
 @app.route('/restart_game', methods=['POST'])
 def restart_game():
     if request.method == 'POST':
-        app.game = Game()
+        current_board_number = app.game.board_number
+        app.game = Game(current_board_number)
         board = app.game.get_board()
         socket_io.emit('board_display', board.tolist())
         next_turn()
@@ -90,14 +92,10 @@ def next_turn():
         score = app.game.calculate_total_score()
         socket_io.emit('display_score', score)
 
-# def run_game_and_send_to_front():
-#     for turn_dict in app.game.run_game():
-#         socket_io.emit('current_shape', [nparray.tolist() for nparray in turn_dict['current_shape']])
-#         # print('turn_data', turn_dict)
-
 
 if __name__ == '__main__':
     app.url_base = 'localhost'
     app.port = 5000
-    app.game = Game()
+    board_number = 1
+    app.game = Game(board_number)
     socket_io.run(app, host=app.url_base, port=app.port, debug=True)

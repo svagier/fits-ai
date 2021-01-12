@@ -3,16 +3,23 @@ import random
 
 import numpy as np
 
-from backend.boards import BOARD_1, FieldType
+from backend.boards import BOARD_1, BOARD_2, BOARD_3, BOARD_4, FieldType
 from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 
 
 class Game:
-    def __init__(self):     # TODO add board param?
+    def __init__(self, board_number: int = 1):
+        self.board_number = board_number
+        if board_number == 4:
+            self.board = copy.deepcopy(BOARD_4)
+        elif board_number == 3:
+            self.board = copy.deepcopy(BOARD_3)
+        elif board_number == 2:
+            self.board = copy.deepcopy(BOARD_2)
+        else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
+            self.board = copy.deepcopy(BOARD_1)
         self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
-        self.board = copy.deepcopy(BOARD_1)     # TODO
-        # np.copyto(self.board, BOARD_1)      # TODO improve
-        self.__initial_board = self.board
+        self.__initial_board = copy.deepcopy(self.board)
         self.board_height = self.board.shape[0]
         self.board_width = self.board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)

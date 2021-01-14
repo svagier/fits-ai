@@ -74,31 +74,79 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
       list_of_remaining_shapes.forEach(function callback(shape, index) {
         let shape_container_id = 'remainingShapeContainer' + index
         $all_remaining_shapes_container.append('<div id="' + (shape_container_id) + '" class="remaining-shape-container"></div>')
-        let $shape_container = $('#' + shape_container_id);
-        let canvas_id = 'remainingShapeCanvas' + index
-        $shape_container.append('<canvas id="' + (canvas_id) + '" width="100" height="100"></canvas>')
+        // let $shape_container = $('#' + shape_container_id);
+        // let canvas_id = 'remainingShapeCanvas' + index
+        // $shape_container.append('<canvas id="' + (canvas_id) + '" width="100" height="100"></canvas>')
 
-        let canvas = document.getElementById(canvas_id);
-        if (canvas.getContext) {
-          let ctx = canvas.getContext('2d');
-          ctx.fillStyle = 'green';
-          let row_number = 0
-          shape.forEach(row => {
-            let column_number = 0
-            row.forEach(field => {
-              if (field) {
-                const x_pos = column_number * field_size  + column_number * field_offset
-                const y_pos = row_number * field_size + row_number * field_offset
-                ctx.fillRect(x_pos, y_pos, field_size, field_size);
-              }
-              column_number += 1
-            });
-            row_number += 1
+
+        // $("#current-shape").empty()
+        let row_number = 0
+        shape.forEach(row => {
+          let column_number = 0
+          row.forEach(field => {
+            let block = document.createElement("div");
+            block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + column_number.toString());
+            block.classList.add("block");
+            if (field === 1) block.classList.add("taken-current-block");
+            $("#" + shape_container_id).append(block);
+            column_number += 1
           });
+          if (column_number < widest_block_width) {
+            for (let i = column_number; i < widest_block_width; i++) {
+              let empty_block = document.createElement("div");
+              empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + i.toString());
+              empty_block.classList.add("block");
+              $("#" + shape_container_id).append(empty_block);
+            }
+          }
+          row_number += 1
+        });
+        while (row_number < tallest_block_height) {
+          for (let col_num = 0; col_num < widest_block_width; col_num++) {
+            let empty_block = document.createElement("div");
+            empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + col_num.toString());
+            empty_block.classList.add("block");
+            $("#" + shape_container_id).append(empty_block);
+          }
+          row_number += 1
         }
-      });
+
+
+
+        //
+        // let row_number = 0
+        // shape.forEach(row => {
+        //   let column_number = 0
+        //   row.forEach(field => {
+        //     let block = document.createElement("div");
+        //     block.setAttribute('id', 'remainingShape' + index + '-r' + row_number.toString() + 'c' + column_number.toString());
+        //     block.classList.add("block");
+        //     if (field === 1) block.classList.add("taken-current-block");
+        //     $("#" + shape_container_id).append(block);
+        //     column_number += 1
+        //   })
+        //   if (column_number < widest_block_width) {
+        //     for (let i = column_number; i < widest_block_width; i++) {
+        //       let empty_block = document.createElement("div");
+        //       empty_block.setAttribute('id', 'remainingShape' + index + '-r' + row_number.toString() + 'c' + i.toString());
+        //       empty_block.classList.add("block");
+        //       $("#current-shape").append(empty_block);
+        //     }
+        //   }
+        //   row_number += 1
+        //   while (row_number < tallest_block_height) {
+        //     for (let col_num = 0; col_num < widest_block_width; col_num++) {
+        //       let empty_block = document.createElement("div");
+        //       empty_block.setAttribute('id', 'remainingShape' + index + '-r' + row_number.toString() + 'c' + col_num.toString());
+        //       empty_block.classList.add("block");
+        //       $("#current-shape").append(empty_block);
+        //     }
+        //     row_number += 1
+        //   }
+        // });
+      })
     }
-  });
+  })
 })
 
 socketio.on('display_score', (score) => {
@@ -254,10 +302,6 @@ function placeCurrentBlock() {
 
 function rejectCurrentBlock() {
   $.post("/reject_current_block")
-}
-
-function clearContainerForCurrentBlock(ctx) {
-  ctx.clearRect(0, 0, ctx.canvas.width, container_height_for_current_block);
 }
 
 function restartGame() {

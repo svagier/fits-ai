@@ -37,6 +37,19 @@ body {
     height: calc(var(--tallest-shape-height) * (var(--block-height) + var(--distance-between-blocks)));
 }
 
+#remainingShapesContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.remaining-shape-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(var(--widest-shape-width) * (var(--block-width) + var(--distance-between-blocks)));
+    height: calc(var(--tallest-shape-height) * (var(--block-height) + var(--distance-between-blocks)));
+    margin: 10px;
+}
+
 #board {
     display: flex;
     flex-wrap: wrap;

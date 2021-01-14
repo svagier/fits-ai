@@ -10,22 +10,6 @@ let current_block_start_column;
 let current_block_width;    // in fields
 const socketio = io();
 
-// TODO add getting field_display_data to FieldType Enum from backend
-let field_display_data = new Map()
-field_display_data.set(0, {'background_color': 'grey', 'text_color': null, 'text': null})   // EMPTY
-field_display_data.set(1, {'background_color': '#2B252C', 'text_color': null, 'text': null})   // TAKEN
-field_display_data.set(2, {'background_color': '#232744', 'text_color': null, 'text': null})   // EXTRA_EMPTY
-field_display_data.set(3, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+1'})   // PLUS_1
-field_display_data.set(4, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+2'})   // PLUS_2
-field_display_data.set(5, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+3'})   // PLUS_3
-field_display_data.set(6, {'background_color': 'black', 'text_color': 'red', 'text': '-5'})   // MINUS_5
-
-// field_display_data.set(7, 'black')   // PAIR_1
-// field_display_data.set(8, 'black')   // PAIR_2
-// field_display_data.set(9, 'black')   // PAIR_3
-// field_display_data.set(10, 'black')   // PAIR_4
-// field_display_data.set(11, 'black')   // PAIR_5
-
 
 function setup() {
   $.post("/game_setup")
@@ -58,11 +42,7 @@ socketio.on('current_shape', (current_block_rotations) => {
     drawCurrentBlock(current_block_rotations[current_rotation])
   }
   else {
-    let canvas = document.getElementById('canvas');
-    if (canvas.getContext) {
-      let ctx = canvas.getContext('2d');
-      clearContainerForCurrentBlock(ctx);
-    }
+    $('curremt-shape').empty();
   }
 })
 
@@ -74,12 +54,7 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
       list_of_remaining_shapes.forEach(function callback(shape, index) {
         let shape_container_id = 'remainingShapeContainer' + index
         $all_remaining_shapes_container.append('<div id="' + (shape_container_id) + '" class="remaining-shape-container"></div>')
-        // let $shape_container = $('#' + shape_container_id);
-        // let canvas_id = 'remainingShapeCanvas' + index
-        // $shape_container.append('<canvas id="' + (canvas_id) + '" width="100" height="100"></canvas>')
 
-
-        // $("#current-shape").empty()
         let row_number = 0
         shape.forEach(row => {
           let column_number = 0
@@ -111,39 +86,6 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
           row_number += 1
         }
 
-
-
-        //
-        // let row_number = 0
-        // shape.forEach(row => {
-        //   let column_number = 0
-        //   row.forEach(field => {
-        //     let block = document.createElement("div");
-        //     block.setAttribute('id', 'remainingShape' + index + '-r' + row_number.toString() + 'c' + column_number.toString());
-        //     block.classList.add("block");
-        //     if (field === 1) block.classList.add("taken-current-block");
-        //     $("#" + shape_container_id).append(block);
-        //     column_number += 1
-        //   })
-        //   if (column_number < widest_block_width) {
-        //     for (let i = column_number; i < widest_block_width; i++) {
-        //       let empty_block = document.createElement("div");
-        //       empty_block.setAttribute('id', 'remainingShape' + index + '-r' + row_number.toString() + 'c' + i.toString());
-        //       empty_block.classList.add("block");
-        //       $("#current-shape").append(empty_block);
-        //     }
-        //   }
-        //   row_number += 1
-        //   while (row_number < tallest_block_height) {
-        //     for (let col_num = 0; col_num < widest_block_width; col_num++) {
-        //       let empty_block = document.createElement("div");
-        //       empty_block.setAttribute('id', 'remainingShape' + index + '-r' + row_number.toString() + 'c' + col_num.toString());
-        //       empty_block.classList.add("block");
-        //       $("#current-shape").append(empty_block);
-        //     }
-        //     row_number += 1
-        //   }
-        // });
       })
     }
   })
@@ -157,11 +99,7 @@ socketio.on('display_score', (score) => {
 
 socketio.on('finished_game', (final_score) => {
   $(document).ready(function () {
-    let canvas = document.getElementById('canvas');
-    if (canvas.getContext) {
-      let ctx = canvas.getContext('2d');
-      clearContainerForCurrentBlock(ctx);
-    }
+    $('curremt-shape').empty();
     current_block_with_rotations = null;
     $('#currentScoreDisplay').text(final_score);
     $('#finalScore').text(final_score);

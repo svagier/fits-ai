@@ -2,11 +2,14 @@
     /* all variables should be changed here: */
     --empty-bg: grey;
     --taken-bg: '2B252C';
+    --taken-current-bg: green;
     --extra-empty-bg: 'inherit';
     --block-width: 20px;
     --block-height: var(--block-width);
     --blocks-per-row: 6;
     --distance-between-blocks: 2px;
+    --tallest-shape-height: 4;  /* in blocks */
+    --widest-shape-width: 4;    /* in blocks */
 }
 
 body {
@@ -27,7 +30,14 @@ body {
     color: black;
 }
 
-#board{
+#current-shape {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(var(--widest-shape-width) * (var(--block-width) + var(--distance-between-blocks)));
+    height: calc(var(--tallest-shape-height) * (var(--block-height) + var(--distance-between-blocks)));
+}
+
+#board {
     display: flex;
     flex-wrap: wrap;
     width: calc(var(--blocks-per-row) * var(--block-width) + var(--blocks-per-row) * var(--distance-between-blocks));
@@ -45,6 +55,10 @@ body {
 
 .taken-block {
     background-color: var(--taken-bg);
+}
+
+.taken-current-block {
+    background-color: var(--taken-current-bg);
 }
 
 .extra-empty-block {

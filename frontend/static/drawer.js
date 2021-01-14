@@ -99,7 +99,7 @@ socketio.on('display_score', (score) => {
 
 socketio.on('finished_game', (final_score) => {
   $(document).ready(function () {
-    $('curremt-shape').empty();
+    $("#current-shape").empty()
     current_block_with_rotations = null;
     $('#currentScoreDisplay').text(final_score);
     $('#finalScore').text(final_score);
@@ -149,6 +149,13 @@ function drawCurrentBlock(current_block) {
     current_block.forEach(row => {
       let column_number = 0
       row.forEach(field => {
+        while (column_number < current_block_start_column) {
+          let empty_block = document.createElement("div");
+          empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + column_number.toString());
+          empty_block.classList.add("block");
+          $("#current-shape").append(empty_block);
+          column_number += 1
+        }
         let block = document.createElement("div");
         block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + column_number.toString());
         block.classList.add("block");
@@ -156,8 +163,8 @@ function drawCurrentBlock(current_block) {
         $("#current-shape").append(block);
         column_number += 1
       });
-      if (column_number < widest_block_width) {
-        for (let i = column_number; i < widest_block_width; i++) {
+      if (column_number < number_of_columns) {
+        for (let i = column_number; i < number_of_columns; i++) {
           let empty_block = document.createElement("div");
           empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + i.toString());
           empty_block.classList.add("block");

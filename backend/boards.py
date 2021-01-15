@@ -19,7 +19,8 @@ class FieldType(Enum):
     PAIR_5 = 11
 
 
-PAIRS_FIELDS = [FieldType.PAIR_1.value, FieldType.PAIR_2.value, FieldType.PAIR_3.value, FieldType.PAIR_4.value, FieldType.PAIR_5.value]
+PAIRS_FIELDS = [FieldType.PAIR_1.value, FieldType.PAIR_2.value, FieldType.PAIR_3.value, FieldType.PAIR_4.value,
+                FieldType.PAIR_5.value]
 
 # rewritten below so that there is no need to write 'FieldType.' and '.value' every time, so below boards are readable
 EMPTY = FieldType.EMPTY.value
@@ -39,9 +40,9 @@ class BoardManager:
     """
     Each Board is 12 Fields high and 6 Fields wide.
     For each Board there are 3 rows of EXTRA_EMPTY. Blocks may be placed there, however neither negative nor positive
-    points are given for filling EXTRA_EMPTY Fields. There are 3 rows of EXTRA_EMPTY, because the tallest Blocks (Shapes) in
-    the game are 4 Fields high, and there is no point in placing Block solely on EXTRA_EMPTY Fields (there will be no points
-    for that).
+    points are given for filling EXTRA_EMPTY Fields. There are 3 rows of EXTRA_EMPTY, because the tallest Blocks
+    (Shapes) in the game are 4 Fields high, and there is no point in placing Block solely on EXTRA_EMPTY Fields (there
+    will be no points for that).
     """
     def __init__(self):
         self.__extra_empty_rows = np.array(

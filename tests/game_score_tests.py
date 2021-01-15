@@ -88,9 +88,9 @@ class ScoreCountingForCustomBoardsTest(unittest.TestCase):
         game = Game(3)
         custom_taken_board = np.array(
             [
-                [1, 1, 1, 1, 1, 1],  # this row should not affect the score - it is row of EXTRA_EMPTY fields
-                [0, 0, 1, 0, 0, 0],  # this row should not affect the score - it is row of EXTRA_EMPTY fields
-                [1, 1, 1, 1, 1, 1],  # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 1, 1, 1, 1, 1],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [0, 0, 1, 0, 0, 0],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 1, 1, 1, 1, 1],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
                 [0, 0, 0, 0, 0, 0],         # -5 -5
                 [1, 1, 1, 1, 1, 1],         # should NOT give +1 for full filled row (only board 1 has points for that)
                 [0, 1, 0, 0, 0, 0],         # no plus 1 because +1 is covered
@@ -105,6 +105,31 @@ class ScoreCountingForCustomBoardsTest(unittest.TestCase):
                 [1, 1, 1, 1, 1, 1]          # should NOT give +1 for full filled row (only board 1 has points for that)
             ])
         correct_score = -62
+        game.set_taken_board(custom_taken_board)
+        game_score = game.calculate_total_score()
+        self.assertEqual(game_score, correct_score)
+
+    def test_total_score_for_custom_filled_board_4(self):
+        game = Game(4)
+        custom_taken_board = np.array(
+            [
+                [1, 1, 1, 1, 1, 1],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [0, 0, 1, 0, 0, 0],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 1, 1, 1, 1, 1],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 1, 1, 1, 1, 1],         # should NOT give +1 for full filled row (only board 1 has points for that)
+                [1, 1, 1, 1, 1, 1],         # should NOT give +1 for full filled row (only board 1 has points for that)
+                [0, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1],
+                [0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0]
+            ])
+        correct_score = -40     # 2 pairs fully uncovered, 2 pairs half uncovered (minus points), 1 pair fully covered
         game.set_taken_board(custom_taken_board)
         game_score = game.calculate_total_score()
         self.assertEqual(game_score, correct_score)

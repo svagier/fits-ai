@@ -56,7 +56,12 @@ class BoardsMiscellaneousChecks(unittest.TestCase):
         self.assertEqual(len(correct_pair_fields), len(PAIRS_FIELDS))
         self.assertEqual(set(correct_pair_fields), set(PAIRS_FIELDS))
 
-    def test_if_all_boards_are_the_same_size(self):
+    def test_if_all_boards_are_correct_size(self):
+        """
+        {lain boards have to be 12 fields high and 6 fields wide. But they have added 3 rows of EXTRA_EMPTY fields, so
+        that final height of board is 15 fields.
+        """
+        self.assertEqual(self.__board_manager.get_board(1).shape, (15, 6))
         self.assertEqual(self.__board_manager.get_board(1).shape, self.__board_manager.get_board(2).shape)
         self.assertEqual(self.__board_manager.get_board(2).shape, self.__board_manager.get_board(3).shape)
         self.assertEqual(self.__board_manager.get_board(3).shape, self.__board_manager.get_board(4).shape)

@@ -6,6 +6,7 @@
     --extra-empty-bg: 'inherit';
     --plus-bg: gainsboro;
     --minus-bg: black;
+    --pair-bg: whitesmoke;
     --block-width: 20px;
     --block-height: var(--block-width);
     --blocks-per-row: 6;
@@ -83,7 +84,7 @@ body {
 .block-with-text {
     text-align: center;
     font-weight: 600;
-    font-size: calc( var(--block-width) / 1.3 );
+    font-size: calc( var(--block-height) / 1.3 );
     line-height: var(--block-height);
 }
 
@@ -95,4 +96,37 @@ body {
 .minus-block {
     background-color: var(--minus-bg);
     color: whitesmoke;
+}
+
+.pair-block {
+    background-color: var(--pair-bg);
+    text-align: center;
+    font-weight: 600;
+    font-size: calc( var(--block-height) );
+    line-height: var(--block-height);
+}
+
+.pair-1:before {
+    color: darkorange;
+    content: '■';
+}
+
+.pair-2:before {
+    color: blueviolet;
+    content: '▲';
+}
+
+.pair-3:before {
+    color: hotpink;
+    content: '◆';
+}
+
+.pair-4:before {
+    color: saddlebrown;
+    content: '◉';
+}
+
+.pair-5:before {
+    color: deepskyblue;
+    content:'▰';
 }

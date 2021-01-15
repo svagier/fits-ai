@@ -123,6 +123,7 @@ function closeFinishedGameModal() {
 
 function drawBoard(board) {
   let plus_blocks = [3, 4, 5]
+  let pairs_blocks = [7, 8, 9, 10, 11]
   $(document).ready(function () {
     $("#board").empty()
     let row_number = 0
@@ -153,6 +154,21 @@ function drawBoard(board) {
           minus_text_div.classList.add("block-with-text");
           minus_text_div.textContent += '-5'
           block.append(minus_text_div);
+        }
+        else if (pairs_blocks.includes(field)) {
+          block.classList.add("pair-block");
+          let pair_text_div = document.createElement("div");
+          if (field === 7)
+            pair_text_div.classList.add("pair-1");
+          else if (field === 8)
+            pair_text_div.classList.add("pair-2");
+          else if (field === 9)
+            pair_text_div.classList.add("pair-3");
+          else if (field === 10)
+            pair_text_div.classList.add("pair-4");
+          else if (field === 11)
+            pair_text_div.classList.add("pair-5");
+          block.append(pair_text_div);
         }
         $("#board").append(block);
         column_number += 1

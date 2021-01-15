@@ -292,3 +292,12 @@ function restartGame() {
 function startGame() {
   $.post("/start_game")
 }
+
+function changeToBoardNumber(board_number) {
+  let board_post_path = "/display_board_"
+  if ([1, 2, 3, 4].includes(board_number))
+    board_post_path += board_number.toString()
+  else
+    board_post_path += '1'      //  default board is 1
+  $.post(board_post_path)
+}

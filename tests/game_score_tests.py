@@ -5,7 +5,7 @@ import numpy as np
 from backend.game import Game
 
 
-class ScoreCountingForInitialBoardsTest(unittest.TestCase):
+class ScoreCountingForInitialBoardsTestCase(unittest.TestCase):
     """Test if Game's function calculate_total_score() gives correct score for original, initial boards."""
     def test_initial_score_for_board_1(self):
         game = Game(1)
@@ -32,7 +32,7 @@ class ScoreCountingForInitialBoardsTest(unittest.TestCase):
         self.assertEqual(initial_total_score, correct_score)
         
 
-class ScoreCountingForCustomBoardsTest(unittest.TestCase):
+class ScoreCountingForCustomBoardsTestCase(unittest.TestCase):
     """Test if Game's function calculate_total_score() gives correct score for custom, partially filled boards."""
     def test_total_score_for_custom_filled_board_1(self):
         game = Game(1)

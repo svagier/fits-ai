@@ -5,7 +5,7 @@ import numpy as np
 from backend.boards import FieldType, PAIRS_FIELDS, BoardManager
 
 
-class BoardsContainingAllowedFields(unittest.TestCase):
+class OnlyAllowedFieldsInBoardsTestCase(unittest.TestCase):
     """
     Test if all boards (BOARD_1, BOARD_2, BOARD_3, BOARD_4) contain only fields (specified by FieldType enum) which are
     valid for this type of board.
@@ -39,7 +39,7 @@ class BoardsContainingAllowedFields(unittest.TestCase):
             self.assertIn(field, allowed_fields_for_board_4)
 
 
-class BoardsMiscellaneousChecks(unittest.TestCase):
+class BoardsMiscellaneousChecksTestCase(unittest.TestCase):
     """
     Miscellaneous tests for boards (BOARD_1, BOARD_2, BOARD_3, BOARD_4).
     """

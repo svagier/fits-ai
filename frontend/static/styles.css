@@ -4,6 +4,7 @@
     --taken-bg: #2B252C;
     --taken-current-bg: green;
     --extra-empty-bg: 'inherit';
+    --plus-bg: gainsboro;
     --block-width: 20px;
     --block-height: var(--block-width);
     --blocks-per-row: 6;
@@ -76,4 +77,16 @@ body {
 
 .extra-empty-block {
     background-color: var(--extra-empty-bg);
+}
+
+.block-with-text {
+    text-align: center;
+    font-weight: 600;
+    font-size: calc( var(--block-width) / 1.3 );
+    line-height: var(--block-height);
+}
+
+.plus-block {
+    background-color: var(--plus-bg);
+    color: darkgreen;
 }

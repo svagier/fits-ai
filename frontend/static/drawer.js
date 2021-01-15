@@ -122,6 +122,7 @@ function closeFinishedGameModal() {
 }
 
 function drawBoard(board) {
+  let plus_blocks = [3, 4, 5]
   $(document).ready(function () {
     $("#board").empty()
     let row_number = 0
@@ -134,6 +135,19 @@ function drawBoard(board) {
         if (field === 0) block.classList.add("empty-block");
         else if (field === 1) block.classList.add("taken-block");
         else if (field === 2) block.classList.add("extra-empty-block");
+        else if (plus_blocks.includes(field)) {
+          block.classList.add("plus-block");
+          let plus_text_div = document.createElement("div");
+          plus_text_div.classList.add("block-with-text");
+          plus_text_div.classList.add("plus-block");
+          if (field === 3)
+            plus_text_div.textContent += '+1'
+          else if (field === 4)
+            plus_text_div.textContent += '+2'
+          else if (field === 5)
+            plus_text_div.textContent += '+3'
+          block.append(plus_text_div);
+        }
         $("#board").append(block);
         column_number += 1
       });

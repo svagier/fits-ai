@@ -1,37 +1,46 @@
+import copy
 import random
 
 import numpy as np
 
-from backend.boards import BOARD_1, FieldType
-from backend.shapes import ALL_SHAPES
+from backend.boards import BOARD_1, BOARD_2, BOARD_3, BOARD_4, FieldType, PAIRS_FIELDS
+from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 
 
 class Game:
-    def __init__(self, board: [np.array] = BOARD_1):
-        self.all_shapes = ALL_SHAPES
-        self.board = board
-        self.__initial_board = board
-        self.board_height = board.shape[0]
-        self.board_width = board.shape[1]
+    def __init__(self, board_number: int = 1):
+        self.board_number = board_number
+        if board_number == 4:
+            self.board = copy.deepcopy(BOARD_4)
+        elif board_number == 3:
+            self.board = copy.deepcopy(BOARD_3)
+        elif board_number == 2:
+            self.board = copy.deepcopy(BOARD_2)
+        else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
+            self.board = copy.deepcopy(BOARD_1)
+        self.names_of_initial_shapes = copy.deepcopy(NAMES_OF_INITIAL_SHAPES)
+        self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
+        self.__initial_board = copy.deepcopy(self.board)
+        self.board_height = self.board.shape[0]
+        self.board_width = self.board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
         self.current_shape = None
-
-    def print_shapes(self):
-        for list_of_rotations in self.all_shapes:
-            print('\n\n Shape:', end='')
-            for rotated_shape in list_of_rotations:
-                print()
-                for row_list in rotated_shape:
-                    print()
-                    for elem in row_list:
-                        if elem:
-                            print('*', end='')
-                        else:
-                            print(' ', end='')
+        self.turn_number = 0         # 0 means that the game has not started yet. Number of the first turn when move is possible is 1. It will be incremented to 1 in next_turn()
+        self.is_finish = False
 
     def get_random_shape(self):
-        return random.choice(self.all_shapes)
+        number_of_remaining_shapes = len(self.remaining_shapes_dict)
+        if number_of_remaining_shapes == 0:
+            self.is_finish = True
+            return
+        if self.turn_number == 1:       # first turn number is 1
+            random_shape_name = random.choice(self.names_of_initial_shapes)
+        else:
+            random_index = random.randrange(0, number_of_remaining_shapes)
+            random_shape_name = list(self.remaining_shapes_dict.keys())[random_index]
+        self.current_shape = self.remaining_shapes_dict.pop(random_shape_name)
+        return self.current_shape
 
     def get_board(self) -> np.array:
         return self.board
@@ -97,6 +106,8 @@ class Game:
             return True
 
     def player_place_block(self, start_col: int, block: np.array) -> bool:
+        if self.is_finish:
+            return False
         if self.is_column_index_correct(start_col, block):
             start_row = self.find_start_row(start_col, block)
             if start_row is None:
@@ -131,19 +142,128 @@ class Game:
         self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)
 
-    def run_game(self):
-        print('in run_game')
-        run = True
-        while run:
-            self.current_shape = self.get_random_shape()
-            yield {'current_shape': self.current_shape}
-            run = False
+    """TODO add comment that id returns only serializable data, so np.arrays are converted to lists"""
+    def next_turn(self) -> dict:
+        new_shape_list = None
+        remaining_shapes_list = None
+        if not self.is_finish:
+            self.turn_number += 1
+            new_shape = self.get_random_shape()
+            if new_shape:
+                new_shape_list = [nparray.tolist() for nparray in new_shape]
+            if self.remaining_shapes_dict:
+                remaining_shapes_list = [nparray[0].tolist() for nparray in list(self.remaining_shapes_dict.values())]
+            else:
+                remaining_shapes_list = None
 
+        data = {
+            "turn_number": self.turn_number,
+            "is_finish": self.is_finish,
+            "score": 0,     #TODO
+            "new_shape":  new_shape_list,
+            "remaining_shapes": remaining_shapes_list
+        }
+        return data
 
-#
-# def main():
-#     print_shapes()
-#
-#
-# if __name__ == "__main__":
-#     main()
+    def calculate_total_score(self) -> int:
+        if self.board_number == 1:
+            return self.calculate_total_score_board_1()
+        elif self.board_number == 2:
+            return self.calculate_total_score_board_2()
+        elif self.board_number == 3:
+            return self.calculate_total_score_board_3()
+        elif self.board_number == 4:
+            return self.calculate_total_score_board_4()
+        else:
+            return Exception ('Board numbers should be in range <1; 4>!')
+
+    def calculate_total_score_board_1(self) -> int:
+        total_score = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            row_completed = True
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
+                    row_completed = False
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+            if row_completed:
+                total_score += 1
+        return total_score
+
+    def calculate_total_score_board_2(self) -> int:
+        total_score = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+                    elif initial_field_value == FieldType.PLUS_1.value:
+                        total_score += 1
+                    elif initial_field_value == FieldType.PLUS_2.value:
+                        total_score += 2
+                    elif initial_field_value == FieldType.PLUS_3.value:
+                        total_score += 3
+        return total_score
+
+    def calculate_total_score_board_3(self) -> int:
+        total_score = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+                    elif initial_field_value == FieldType.MINUS_5.value:
+                        total_score -= 5
+                    elif initial_field_value == FieldType.PLUS_1.value:
+                        total_score += 1
+                    elif initial_field_value == FieldType.PLUS_2.value:
+                        total_score += 2
+                    elif initial_field_value == FieldType.PLUS_3.value:
+                        total_score += 3
+        return total_score
+
+    def calculate_total_score_board_4(self) -> int:
+        total_score = 0
+        pair_fields_uncovered = {}
+        for pair_field_type in PAIRS_FIELDS:
+            pair_fields_uncovered[pair_field_type] = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                initial_field_value = self.__initial_board[row_index, col_index]
+                if col_value == 0:
+                    if initial_field_value == FieldType.EMPTY.value:
+                        total_score -= 1
+                    elif initial_field_value in PAIRS_FIELDS:
+                        pair_fields_uncovered[initial_field_value] += 1
+        for number_of_uncovered_pair_fields in pair_fields_uncovered.values():
+            if number_of_uncovered_pair_fields == 2:
+                total_score += 3
+            elif number_of_uncovered_pair_fields == 1:
+                total_score -= 3
+        return total_score
+
+    def get_extra_current_stats(self) -> dict:
+        current_shape_fields_taken = int(np.sum(self.current_shape[0]))
+        remaining_shapes_fields_taken = 0
+        for shape in self.remaining_shapes_dict.values():
+            remaining_shapes_fields_taken += int(np.sum(shape[0]))
+        all_empty_remaining_fields = 0
+        empty_unreachable_fields = 0
+        for row_index, row_value in enumerate(self.__taken_board):
+            for col_index, col_value in enumerate(row_value):
+                if self.__initial_board[row_index, col_index] != FieldType.EXTRA_EMPTY.value:
+                    if col_value == 0:
+                        all_empty_remaining_fields += 1
+                        if row_index > 0:
+                            if self.__taken_board[row_index - 1, col_index] == 1:
+                                empty_unreachable_fields += 1
+
+        return {
+            "taken_fields_in_current_shape": current_shape_fields_taken,
+            "taken_fields_in_remaining_shapes_without_current": remaining_shapes_fields_taken,
+            "all_empty_reachable_fields": all_empty_remaining_fields - empty_unreachable_fields,
+            "empty_unreachable_fields": empty_unreachable_fields
+        }

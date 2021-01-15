@@ -3,24 +3,19 @@ import random
 
 import numpy as np
 
-from backend.boards import BOARD_1, BOARD_2, BOARD_3, BOARD_4, FieldType, PAIRS_FIELDS
+from backend.boards import FieldType, PAIRS_FIELDS, BoardManager
 from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 
 
 class Game:
     def __init__(self, board_number: int = 1):
+        self.__board_manager = BoardManager()
         self.board_number = board_number
-        if board_number == 1:
-            self.board = copy.deepcopy(BOARD_1)
-        elif board_number == 2:
-            self.board = copy.deepcopy(BOARD_2)
-        elif board_number == 3:
-            self.board = copy.deepcopy(BOARD_3)
-        elif board_number == 4:
-            self.board = copy.deepcopy(BOARD_4)
-        else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
+        if board_number in [1, 2, 3, 4]:        # allowed numbers of boards
+            self.board = self.__board_manager.get_board(board_number)
+        else:       # BOARD_1 is default if board_number is wrong
             print('Passed in wrong number of board ({}). Using default board - board number 1.'.format(board_number))
-            self.board = copy.deepcopy(BOARD_1)
+            self.board = self.__board_manager.get_board(1)
         self.names_of_initial_shapes = copy.deepcopy(NAMES_OF_INITIAL_SHAPES)
         self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
         self.__initial_board = copy.deepcopy(self.board)
@@ -50,6 +45,10 @@ class Game:
 
     def get_taken_board(self) -> np.array:
         return self.__taken_board
+
+    """This method should be used only for tests! (game_score_tests.py)"""
+    def set_taken_board(self, new_taken_board: np.array):
+        self.__taken_board = new_taken_board
 
     """end_col is not inclusive, just like with slicing lists"""
     def update_column_peaks_row_indexes(self, start_col: int, end_col: int):

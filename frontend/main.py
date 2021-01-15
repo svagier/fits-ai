@@ -79,6 +79,38 @@ def restart_game():
     return render_template('index.html')
 
 
+@app.route('/display_board_1', methods=['POST'])
+def display_board_1():
+    if request.method == 'POST':
+        return display_board_number(1)
+
+
+@app.route('/display_board_2', methods=['POST'])
+def display_board_2():
+    if request.method == 'POST':
+        return display_board_number(2)
+
+
+@app.route('/display_board_3', methods=['POST'])
+def display_board_3():
+    if request.method == 'POST':
+        return display_board_number(3)
+
+
+@app.route('/display_board_4', methods=['POST'])
+def display_board_4():
+    if request.method == 'POST':
+        return display_board_number(4)
+
+
+def display_board_number(board_number: int):
+    app.game = Game(board_number)
+    board = app.game.get_board()
+    socket_io.emit('board_display', board.tolist())
+    next_turn()
+    return render_template('index.html')
+
+
 def next_turn():
     turn_dict = app.game.next_turn()
     socket_io.emit('extra_current_stats', app.game.get_extra_current_stats())
@@ -97,6 +129,6 @@ def next_turn():
 if __name__ == '__main__':
     app.url_base = 'localhost'
     app.port = 5000
-    board_number = 4
-    app.game = Game(board_number)
+    default_board_number = 4
+    app.game = Game(default_board_number)
     socket_io.run(app, host=app.url_base, port=app.port, debug=True)

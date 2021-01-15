@@ -17,6 +17,7 @@ class Game:
         elif board_number == 2:
             self.board = copy.deepcopy(BOARD_2)
         else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
+            print('Passed in wrong number of board ({}). Using default board - board number 1.'.format(board_number))
             self.board = copy.deepcopy(BOARD_1)
         self.names_of_initial_shapes = copy.deepcopy(NAMES_OF_INITIAL_SHAPES)
         self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)

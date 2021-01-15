@@ -10,22 +10,6 @@ let current_block_start_column;
 let current_block_width;    // in fields
 const socketio = io();
 
-// TODO add getting field_display_data to FieldType Enum from backend
-let field_display_data = new Map()
-field_display_data.set(0, {'background_color': 'grey', 'text_color': null, 'text': null})   // EMPTY
-field_display_data.set(1, {'background_color': '#2B252C', 'text_color': null, 'text': null})   // TAKEN
-field_display_data.set(2, {'background_color': '#232744', 'text_color': null, 'text': null})   // EXTRA_EMPTY
-field_display_data.set(3, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+1'})   // PLUS_1
-field_display_data.set(4, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+2'})   // PLUS_2
-field_display_data.set(5, {'background_color': 'whitesmoke', 'text_color': 'black', 'text': '+3'})   // PLUS_3
-field_display_data.set(6, {'background_color': 'black', 'text_color': 'red', 'text': '-5'})   // MINUS_5
-
-// field_display_data.set(7, 'black')   // PAIR_1
-// field_display_data.set(8, 'black')   // PAIR_2
-// field_display_data.set(9, 'black')   // PAIR_3
-// field_display_data.set(10, 'black')   // PAIR_4
-// field_display_data.set(11, 'black')   // PAIR_5
-
 
 function setup() {
   $.post("/game_setup")
@@ -58,11 +42,7 @@ socketio.on('current_shape', (current_block_rotations) => {
     drawCurrentBlock(current_block_rotations[current_rotation])
   }
   else {
-    let canvas = document.getElementById('canvas');
-    if (canvas.getContext) {
-      let ctx = canvas.getContext('2d');
-      clearContainerForCurrentBlock(ctx);
-    }
+    $('curremt-shape').empty();
   }
 })
 
@@ -74,31 +54,41 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
       list_of_remaining_shapes.forEach(function callback(shape, index) {
         let shape_container_id = 'remainingShapeContainer' + index
         $all_remaining_shapes_container.append('<div id="' + (shape_container_id) + '" class="remaining-shape-container"></div>')
-        let $shape_container = $('#' + shape_container_id);
-        let canvas_id = 'remainingShapeCanvas' + index
-        $shape_container.append('<canvas id="' + (canvas_id) + '" width="100" height="100"></canvas>')
 
-        let canvas = document.getElementById(canvas_id);
-        if (canvas.getContext) {
-          let ctx = canvas.getContext('2d');
-          ctx.fillStyle = 'green';
-          let row_number = 0
-          shape.forEach(row => {
-            let column_number = 0
-            row.forEach(field => {
-              if (field) {
-                const x_pos = column_number * field_size  + column_number * field_offset
-                const y_pos = row_number * field_size + row_number * field_offset
-                ctx.fillRect(x_pos, y_pos, field_size, field_size);
-              }
-              column_number += 1
-            });
-            row_number += 1
+        let row_number = 0
+        shape.forEach(row => {
+          let column_number = 0
+          row.forEach(field => {
+            let block = document.createElement("div");
+            block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + column_number.toString());
+            block.classList.add("block");
+            if (field === 1) block.classList.add("taken-current-block");
+            $("#" + shape_container_id).append(block);
+            column_number += 1
           });
+          if (column_number < widest_block_width) {
+            for (let i = column_number; i < widest_block_width; i++) {
+              let empty_block = document.createElement("div");
+              empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + i.toString());
+              empty_block.classList.add("block");
+              $("#" + shape_container_id).append(empty_block);
+            }
+          }
+          row_number += 1
+        });
+        while (row_number < tallest_block_height) {
+          for (let col_num = 0; col_num < widest_block_width; col_num++) {
+            let empty_block = document.createElement("div");
+            empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + col_num.toString());
+            empty_block.classList.add("block");
+            $("#" + shape_container_id).append(empty_block);
+          }
+          row_number += 1
         }
-      });
+
+      })
     }
-  });
+  })
 })
 
 socketio.on('display_score', (score) => {
@@ -109,11 +99,7 @@ socketio.on('display_score', (score) => {
 
 socketio.on('finished_game', (final_score) => {
   $(document).ready(function () {
-    let canvas = document.getElementById('canvas');
-    if (canvas.getContext) {
-      let ctx = canvas.getContext('2d');
-      clearContainerForCurrentBlock(ctx);
-    }
+    $("#current-shape").empty()
     current_block_with_rotations = null;
     $('#currentScoreDisplay').text(final_score);
     $('#finalScore').text(final_score);
@@ -127,7 +113,6 @@ socketio.on('extra_current_stats', (extra_current_stats) => {
     $('#extraCurrentStats #takenFieldsInOtherRemainingShapes').text(extra_current_stats.taken_fields_in_remaining_shapes_without_current);
     $('#extraCurrentStats #allUnreachableEmptyFields').text(extra_current_stats.empty_unreachable_fields);
     $('#extraCurrentStats #allRemainingReachableEmptyFields').text(extra_current_stats.all_empty_reachable_fields);
-
   });
 })
 
@@ -137,45 +122,103 @@ function closeFinishedGameModal() {
 }
 
 function drawBoard(board) {
-  let canvas = document.getElementById('canvas');
-  if (canvas.getContext) {
-    let ctx = canvas.getContext('2d');
+  let plus_blocks = [3, 4, 5]
+  let pairs_blocks = [7, 8, 9, 10, 11]
+  $(document).ready(function () {
+    $("#board").empty()
     let row_number = 0
     board.forEach(row => {
       let column_number = 0
       row.forEach(field => {
-        ctx.fillStyle = field_display_data.get(field)['background_color'];
-        const x_pos = column_number * field_size  + column_number * field_offset
-        const y_pos = container_height_for_current_block + row_number * field_size + row_number * field_offset
-        ctx.fillRect(x_pos, y_pos, field_size, field_size);
-
+        let block = document.createElement("div");
+        block.setAttribute('id', 'r' + row_number.toString() + 'c' + column_number.toString());
+        block.classList.add("block");
+        if (field === 0) block.classList.add("empty-block");
+        else if (field === 1) block.classList.add("taken-block");
+        else if (field === 2) block.classList.add("extra-empty-block");
+        else if (plus_blocks.includes(field)) {
+          block.classList.add("plus-block");
+          let plus_text_div = document.createElement("div");
+          plus_text_div.classList.add("block-with-text");
+          if (field === 3)
+            plus_text_div.textContent += '+1'
+          else if (field === 4)
+            plus_text_div.textContent += '+2'
+          else if (field === 5)
+            plus_text_div.textContent += '+3'
+          block.append(plus_text_div);
+        }
+        else if (field === 6) {
+          block.classList.add("minus-block");
+          let minus_text_div = document.createElement("div");
+          minus_text_div.classList.add("block-with-text");
+          minus_text_div.textContent += '-5'
+          block.append(minus_text_div);
+        }
+        else if (pairs_blocks.includes(field)) {
+          block.classList.add("pair-block");
+          let pair_text_div = document.createElement("div");
+          if (field === 7)
+            pair_text_div.classList.add("pair-1");
+          else if (field === 8)
+            pair_text_div.classList.add("pair-2");
+          else if (field === 9)
+            pair_text_div.classList.add("pair-3");
+          else if (field === 10)
+            pair_text_div.classList.add("pair-4");
+          else if (field === 11)
+            pair_text_div.classList.add("pair-5");
+          block.append(pair_text_div);
+        }
+        $("#board").append(block);
         column_number += 1
       });
       row_number += 1
     });
-  }
+  });
 }
 
 function drawCurrentBlock(current_block) {
-  let canvas = document.getElementById('canvas');
-  if (canvas.getContext) {
-    let ctx = canvas.getContext('2d');
-    clearContainerForCurrentBlock(ctx);
-    ctx.fillStyle = 'green';
+  $(document).ready(function () {
+    $("#current-shape").empty()
     let row_number = 0
     current_block.forEach(row => {
-      let column_number = current_block_start_column
+      let column_number = 0
       row.forEach(field => {
-        if (field) {
-          const x_pos = column_number * field_size  + column_number * field_offset
-          const y_pos = row_number * field_size + row_number * field_offset
-          ctx.fillRect(x_pos, y_pos, field_size, field_size);
+        while (column_number < current_block_start_column) {
+          let empty_block = document.createElement("div");
+          empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + column_number.toString());
+          empty_block.classList.add("block");
+          $("#current-shape").append(empty_block);
+          column_number += 1
         }
+        let block = document.createElement("div");
+        block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + column_number.toString());
+        block.classList.add("block");
+        if (field === 1) block.classList.add("taken-current-block");
+        $("#current-shape").append(block);
         column_number += 1
       });
+      if (column_number < number_of_columns) {
+        for (let i = column_number; i < number_of_columns; i++) {
+          let empty_block = document.createElement("div");
+          empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + i.toString());
+          empty_block.classList.add("block");
+          $("#current-shape").append(empty_block);
+        }
+      }
       row_number += 1
     });
-  }
+    while (row_number < tallest_block_height) {
+      for (let col_num = 0; col_num < widest_block_width; col_num++) {
+        let empty_block = document.createElement("div");
+        empty_block.setAttribute('id', 'currentBlock-r' + row_number.toString() + 'c' + col_num.toString());
+        empty_block.classList.add("block");
+        $("#current-shape").append(empty_block);
+      }
+      row_number += 1
+    }
+  });
 }
 
 function rotateCurrentBlockClockwise() {
@@ -240,10 +283,6 @@ function placeCurrentBlock() {
 
 function rejectCurrentBlock() {
   $.post("/reject_current_block")
-}
-
-function clearContainerForCurrentBlock(ctx) {
-  ctx.clearRect(0, 0, ctx.canvas.width, container_height_for_current_block);
 }
 
 function restartGame() {

@@ -1,3 +1,20 @@
+:root {
+    /* all variables should be changed here: */
+    --empty-bg: grey;
+    --taken-bg: #2B252C;
+    --taken-current-bg: green;
+    --extra-empty-bg: 'inherit';
+    --plus-bg: gainsboro;
+    --minus-bg: black;
+    --pair-bg: whitesmoke;
+    --block-width: 20px;
+    --block-height: var(--block-width);
+    --blocks-per-row: 6;
+    --distance-between-blocks: 2px;
+    --tallest-shape-height: 4;  /* in blocks */
+    --widest-shape-width: 4;    /* in blocks */
+}
+
 body {
     background-color: #232744;
     color: whitesmoke;
@@ -14,4 +31,102 @@ body {
 
 .modal {
     color: black;
+}
+
+#current-shape {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(var(--blocks-per-row) * (var(--block-width) + var(--distance-between-blocks)));
+    height: calc(var(--tallest-shape-height) * (var(--block-height) + var(--distance-between-blocks)));
+}
+
+#remainingShapesContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.remaining-shape-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(var(--widest-shape-width) * (var(--block-width) + var(--distance-between-blocks)));
+    height: calc(var(--tallest-shape-height) * (var(--block-height) + var(--distance-between-blocks)));
+    margin: 10px;
+}
+
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(var(--blocks-per-row) * var(--block-width) + var(--blocks-per-row) * var(--distance-between-blocks));
+}
+
+.block {
+    width: var(--block-width);
+    height: var(--block-height);
+    margin: calc(var(--distance-between-blocks) / 2);
+}
+
+.empty-block {
+    background-color: var(--empty-bg);
+}
+
+.taken-block {
+    background-color: var(--taken-bg);
+}
+
+.taken-current-block {
+    background-color: var(--taken-current-bg);
+}
+
+.extra-empty-block {
+    background-color: var(--extra-empty-bg);
+}
+
+.block-with-text {
+    text-align: center;
+    font-weight: 600;
+    font-size: calc( var(--block-height) / 1.3 );
+    line-height: var(--block-height);
+}
+
+.plus-block {
+    background-color: var(--plus-bg);
+    color: darkgreen;
+}
+
+.minus-block {
+    background-color: var(--minus-bg);
+    color: whitesmoke;
+}
+
+.pair-block {
+    background-color: var(--pair-bg);
+    text-align: center;
+    font-weight: 600;
+    font-size: calc( var(--block-height) );
+    line-height: var(--block-height);
+}
+
+.pair-1:before {
+    color: darkorange;
+    content: '■';
+}
+
+.pair-2:before {
+    color: blueviolet;
+    content: '▲';
+}
+
+.pair-3:before {
+    color: hotpink;
+    content: '◆';
+}
+
+.pair-4:before {
+    color: saddlebrown;
+    content: '◉';
+}
+
+.pair-5:before {
+    color: deepskyblue;
+    content:'▰';
 }

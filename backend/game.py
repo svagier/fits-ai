@@ -126,13 +126,12 @@ class Game:
                 incoming_block_exists_on_this_field = block[row_num - start_row, col_num - start_col] == 1
                 if incoming_block_exists_on_this_field:
                     field_value_on_board = self.board[row_num, col_num]
-                    if field_value_on_board == FieldType.EMPTY.value or field_value_on_board == FieldType.EXTRA_EMPTY.value:
-                        self.board[row_num, col_num] = FieldType.TAKEN.value
-                    # elif: add handling for PAIRS handling TODO
-                    elif field_value_on_board == FieldType.TAKEN.value:
+                    if field_value_on_board == FieldType.TAKEN.value:
                         raise Exception('If this exception is raised, it means that there is a bug and this block'
                                         'should not be placed here. It should have been never allowed to this function '
                                         '(update_main_board).')     # for DEBUG, need to comment out later TODO
+                    self.board[row_num, col_num] = FieldType.TAKEN.value
+                    # elif: add handling for PAIRS handling TODO
 
     def place_block(self, start_row: int, start_col: int, block: np.array):
         block_height, block_width = block.shape

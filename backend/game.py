@@ -1,10 +1,9 @@
-import copy
 import random
 
 import numpy as np
 
 from backend.boards import FieldType, PAIRS_FIELDS, BoardManager
-from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
+from backend.shapes import ShapesManager
 
 
 class Game:
@@ -18,13 +17,14 @@ class Game:
             print('Passed in wrong number of board ({}). Using default board - board number 1.'.format(board_number))
             self.board = self.__board_manager.get_board(1)
             self.__initial_board = self.__board_manager.get_board(1)
-        self.names_of_initial_shapes = copy.deepcopy(NAMES_OF_INITIAL_SHAPES)
-        self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
-        self.board_height = self.board.shape[0]     # board height with extra rows
-        self.board_width = self.board.shape[1]
         self.number_of_extra_rows_on_board = self.__board_manager.get_number_of_extra_rows()
+        self.board_height = self.board.shape[0]     # board height including extra rows (number_of_extra_rows_on_board)
+        self.board_width = self.board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
+        self.__shapes_manager = ShapesManager()
+        self.names_of_initial_shapes = self.__shapes_manager.get_names_of_initial_shapes()
+        self.remaining_shapes_dict = self.__shapes_manager.get_all_shapes_dict()
         self.current_shape = None
         self.turn_number = 0         # 0 means that the game has not started yet. Number of the first turn when move is possible is 1. It will be incremented to 1 in next_turn()
         self.is_finish = False

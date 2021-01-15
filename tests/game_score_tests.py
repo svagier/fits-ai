@@ -84,6 +84,31 @@ class ScoreCountingForCustomBoardsTest(unittest.TestCase):
         game_score = game.calculate_total_score()
         self.assertEqual(game_score, correct_score)
 
+    def test_total_score_for_custom_filled_board_3(self):
+        game = Game(3)
+        custom_taken_board = np.array(
+            [
+                [1, 1, 1, 1, 1, 1],  # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [0, 0, 1, 0, 0, 0],  # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 1, 1, 1, 1, 1],  # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [0, 0, 0, 0, 0, 0],         # -5 -5
+                [1, 1, 1, 1, 1, 1],         # should NOT give +1 for full filled row (only board 1 has points for that)
+                [0, 1, 0, 0, 0, 0],         # no plus 1 because +1 is covered
+                [0, 0, 0, 1, 0, 1],         # -5
+                [0, 0, 0, 0, 0, 0],         # +3 - 5
+                [0, 1, 0, 0, 0, 0],         # no plus 3 because +3 is covered
+                [0, 0, 0, 0, 0, 0],         # -5
+                [1, 1, 1, 1, 1, 1],         # should NOT give +1 for full filled row (only board 1 has points for that)
+                [0, 0, 0, 0, 0, 0],         # +2 +2 -5
+                [0, 0, 0, 0, 1, 0],         # no plus 2 because +2 is covered
+                [0, 0, 1, 0, 0, 0],         # no minus 5 because -5 is covered
+                [1, 1, 1, 1, 1, 1]          # should NOT give +1 for full filled row (only board 1 has points for that)
+            ])
+        correct_score = -62
+        game.set_taken_board(custom_taken_board)
+        game_score = game.calculate_total_score()
+        self.assertEqual(game_score, correct_score)
+
 
 if __name__ == '__main__':
     unittest.main()

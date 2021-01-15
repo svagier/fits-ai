@@ -1,5 +1,7 @@
 import unittest
 
+import numpy as np
+
 from backend.game import Game
 
 
@@ -28,6 +30,34 @@ class ScoreCountingForInitialBoardsTest(unittest.TestCase):
         initial_total_score = game.calculate_total_score()
         correct_score = -62 + 5*3       # -1 for each empty field (-62)  + extra 3 points for each uncovered pair
         self.assertEqual(initial_total_score, correct_score)
+        
+
+class ScoreCountingForCustomBoardsTest(unittest.TestCase):
+    """Test if Game's function calculate_total_score() gives correct score for custom, partially filled boards."""
+    def test_total_score_for_custom_filled_board_1(self):
+        game = Game(1)
+        custom_taken_board = np.array(
+            [
+                [1, 1, 1, 1, 1, 1],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 0, 1, 0, 0, 0],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 0, 0, 0, 1, 0],         # this row should not affect the score - it is row of EXTRA_EMPTY fields
+                [1, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0],
+                [1, 0, 0, 1, 0, 0],
+                [1, 0, 1, 0, 0, 0],
+                [1, 1, 0, 0, 0, 0],
+                [1, 1, 1, 1, 1, 1]          # + 1 for full filled row
+            ])
+        correct_score = -49
+        game.set_taken_board(custom_taken_board)
+        game_score = game.calculate_total_score()
+        self.assertEqual(game_score, correct_score)
 
 
 if __name__ == '__main__':

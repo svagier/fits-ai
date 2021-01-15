@@ -43,7 +43,8 @@ class BoardsMiscellaneousChecks(unittest.TestCase):
         self.assertEqual(FieldType.TAKEN.value, 1)
 
     def test_if_all_pair_fields_in_PAIRS_FIELDS(self):
-        correct_pair_fields = [FieldType.PAIR_1.value, FieldType.PAIR_2.value, FieldType.PAIR_3.value, FieldType.PAIR_4.value, FieldType.PAIR_5.value]
+        correct_pair_fields = [FieldType.PAIR_1.value, FieldType.PAIR_2.value, FieldType.PAIR_3.value,
+                               FieldType.PAIR_4.value, FieldType.PAIR_5.value]
         self.assertEqual(len(correct_pair_fields), len(PAIRS_FIELDS))
         self.assertEqual(set(correct_pair_fields), set(PAIRS_FIELDS))
 

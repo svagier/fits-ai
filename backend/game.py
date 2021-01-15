@@ -10,12 +10,14 @@ from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
 class Game:
     def __init__(self, board_number: int = 1):
         self.board_number = board_number
-        if board_number == 4:
-            self.board = copy.deepcopy(BOARD_4)
-        elif board_number == 3:
-            self.board = copy.deepcopy(BOARD_3)
+        if board_number == 1:
+            self.board = copy.deepcopy(BOARD_1)
         elif board_number == 2:
             self.board = copy.deepcopy(BOARD_2)
+        elif board_number == 3:
+            self.board = copy.deepcopy(BOARD_3)
+        elif board_number == 4:
+            self.board = copy.deepcopy(BOARD_4)
         else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
             print('Passed in wrong number of board ({}). Using default board - board number 1.'.format(board_number))
             self.board = copy.deepcopy(BOARD_1)

@@ -126,3 +126,6 @@ class BoardManager:
             return np.concatenate((copy.deepcopy(self.__extra_empty_rows), copy.deepcopy(self.__board_4)))
         else:
             raise Exception("Only 4 boards are available! Valid numbers are 1, 2, 3 and 4.")
+
+    def get_number_of_extra_rows(self):
+        return self.__extra_empty_rows.shape[0]

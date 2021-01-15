@@ -301,3 +301,8 @@ function changeToBoardNumber(board_number) {
     board_post_path += '1'      //  default board is 1
   $.post(board_post_path)
 }
+
+function markActive(button) {
+  $('.level-button').removeClass('active');
+  button.classList.add("active");
+}

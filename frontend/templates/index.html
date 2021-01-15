@@ -25,10 +25,10 @@
                 </div>
                 <div class="row">
                     <button type="button" class="btn btn-danger mr-2" onclick="restartGame()">Restart</button>
-                    <button type="button" class="btn btn-light mr-2" onclick="changeToBoardNumber(1)">Level 1</button>
-                    <button type="button" class="btn btn-light mr-2" onclick="changeToBoardNumber(2)">Level 2</button>
-                    <button type="button" class="btn btn-light mr-2" onclick="changeToBoardNumber(3)">Level 3</button>
-                    <button type="button" class="btn btn-light" onclick="changeToBoardNumber(4)">Level 4</button>
+                    <button type="button" class="btn btn-light mr-2 level-button active" onclick="changeToBoardNumber(1); markActive(this);">Level 1</button>
+                    <button type="button" class="btn btn-light mr-2 level-button" onclick="changeToBoardNumber(2); markActive(this);">Level 2</button>
+                    <button type="button" class="btn btn-light mr-2 level-button" onclick="changeToBoardNumber(3); markActive(this);">Level 3</button>
+                    <button type="button" class="btn btn-light level-button" onclick="changeToBoardNumber(4); markActive(this);">Level 4</button>
 
                 </div>
             </div>

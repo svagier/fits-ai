@@ -1,7 +1,7 @@
 :root {
     /* all variables should be changed here: */
     --empty-bg: grey;
-    --taken-bg: #2B252C;
+    --taken-bg: #074610;
     --taken-current-bg: green;
     --extra-empty-bg: 'inherit';
     --plus-bg: gainsboro;

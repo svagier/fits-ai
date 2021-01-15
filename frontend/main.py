@@ -129,6 +129,6 @@ def next_turn():
 if __name__ == '__main__':
     app.url_base = 'localhost'
     app.port = 5000
-    default_board_number = 4
+    default_board_number = 1
     app.game = Game(default_board_number)
     socket_io.run(app, host=app.url_base, port=app.port, debug=True)

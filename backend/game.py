@@ -1,31 +1,30 @@
-import copy
 import random
 
 import numpy as np
 
-from backend.boards import BOARD_1, BOARD_2, BOARD_3, BOARD_4, FieldType, PAIRS_FIELDS
-from backend.shapes import ALL_SHAPES_DICT, NAMES_OF_INITIAL_SHAPES
+from backend.boards import FieldType, PAIRS_FIELDS, BoardManager
+from backend.shapes import ShapesManager
 
 
 class Game:
     def __init__(self, board_number: int = 1):
+        self.__board_manager = BoardManager()
         self.board_number = board_number
-        if board_number == 4:
-            self.board = copy.deepcopy(BOARD_4)
-        elif board_number == 3:
-            self.board = copy.deepcopy(BOARD_3)
-        elif board_number == 2:
-            self.board = copy.deepcopy(BOARD_2)
-        else:       # BOARD_1 is default if board_number is wrong (or if it is 1)
+        if board_number in [1, 2, 3, 4]:        # allowed numbers of boards
+            self.board = self.__board_manager.get_board(board_number)       # on this board changes will be put
+            self.__initial_board = self.__board_manager.get_board(board_number)     # this board will remain unchanged
+        else:       # BOARD_1 is default if board_number is wrong
             print('Passed in wrong number of board ({}). Using default board - board number 1.'.format(board_number))
-            self.board = copy.deepcopy(BOARD_1)
-        self.names_of_initial_shapes = copy.deepcopy(NAMES_OF_INITIAL_SHAPES)
-        self.remaining_shapes_dict = copy.deepcopy(ALL_SHAPES_DICT)
-        self.__initial_board = copy.deepcopy(self.board)
-        self.board_height = self.board.shape[0]
+            self.board = self.__board_manager.get_board(1)
+            self.__initial_board = self.__board_manager.get_board(1)
+        self.number_of_extra_rows_on_board = self.__board_manager.get_number_of_extra_rows()
+        self.board_height = self.board.shape[0]     # board height including extra rows (number_of_extra_rows_on_board)
         self.board_width = self.board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
+        self.__shapes_manager = ShapesManager()
+        self.names_of_initial_shapes = self.__shapes_manager.get_names_of_initial_shapes()
+        self.remaining_shapes_dict = self.__shapes_manager.get_all_shapes_dict()
         self.current_shape = None
         self.turn_number = 0         # 0 means that the game has not started yet. Number of the first turn when move is possible is 1. It will be incremented to 1 in next_turn()
         self.is_finish = False
@@ -48,6 +47,10 @@ class Game:
 
     def get_taken_board(self) -> np.array:
         return self.__taken_board
+
+    """This method should be used only for tests! (game_score_tests.py)"""
+    def set_taken_board(self, new_taken_board: np.array):
+        self.__taken_board = new_taken_board
 
     """end_col is not inclusive, just like with slicing lists"""
     def update_column_peaks_row_indexes(self, start_col: int, end_col: int):
@@ -175,11 +178,13 @@ class Game:
         elif self.board_number == 4:
             return self.calculate_total_score_board_4()
         else:
-            return Exception ('Board numbers should be in range <1; 4>!')
+            return Exception('Board numbers should be in range <1; 4>!')
 
     def calculate_total_score_board_1(self) -> int:
         total_score = 0
         for row_index, row_value in enumerate(self.__taken_board):
+            if row_index < self.number_of_extra_rows_on_board:
+                continue                    # ignore blocks placed in extra rows (rows with EXTRA_EMPTY fields)
             row_completed = True
             for col_index, col_value in enumerate(row_value):
                 initial_field_value = self.__initial_board[row_index, col_index]
@@ -194,6 +199,8 @@ class Game:
     def calculate_total_score_board_2(self) -> int:
         total_score = 0
         for row_index, row_value in enumerate(self.__taken_board):
+            if row_index < self.number_of_extra_rows_on_board:
+                continue                    # ignore blocks placed in extra rows (rows with EXTRA_EMPTY fields)
             for col_index, col_value in enumerate(row_value):
                 initial_field_value = self.__initial_board[row_index, col_index]
                 if col_value == 0:
@@ -210,6 +217,8 @@ class Game:
     def calculate_total_score_board_3(self) -> int:
         total_score = 0
         for row_index, row_value in enumerate(self.__taken_board):
+            if row_index < self.number_of_extra_rows_on_board:
+                continue                    # ignore blocks placed in extra rows (rows with EXTRA_EMPTY fields)
             for col_index, col_value in enumerate(row_value):
                 initial_field_value = self.__initial_board[row_index, col_index]
                 if col_value == 0:
@@ -231,6 +240,8 @@ class Game:
         for pair_field_type in PAIRS_FIELDS:
             pair_fields_uncovered[pair_field_type] = 0
         for row_index, row_value in enumerate(self.__taken_board):
+            if row_index < self.number_of_extra_rows_on_board:
+                continue                    # ignore blocks placed in extra rows (rows with EXTRA_EMPTY fields)
             for col_index, col_value in enumerate(row_value):
                 initial_field_value = self.__initial_board[row_index, col_index]
                 if col_value == 0:

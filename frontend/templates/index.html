@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.js" integrity="sha512-2rUSTSAeOO02jF6eBqENNqPs1EohenJ5j+1dgDPdXSLz9nOlrr8DJk4zW/lDy8rjhGCSonW3Gx812XJQIKZKJQ==" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='drawer.js') }}"></script>
+    <script src="{{ url_for('static', filename='helper_functions.js') }}"></script>
     <script src="{{ url_for('static', filename='key_handling.js') }}"></script>
 
 
@@ -24,7 +24,12 @@
                     <span id="currentScoreDisplay" class="col"></span>
                 </div>
                 <div class="row">
-                    <button type="button" class="btn btn-light" onclick="restartGame()">Restart</button>
+                    <button type="button" class="btn btn-danger mr-2" onclick="restartGame()">Restart</button>
+                    <button type="button" class="btn btn-light mr-2" onclick="changeToBoardNumber(1)">Level 1</button>
+                    <button type="button" class="btn btn-light mr-2" onclick="changeToBoardNumber(2)">Level 2</button>
+                    <button type="button" class="btn btn-light mr-2" onclick="changeToBoardNumber(3)">Level 3</button>
+                    <button type="button" class="btn btn-light" onclick="changeToBoardNumber(4)">Level 4</button>
+
                 </div>
             </div>
             <div class="col">

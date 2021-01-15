@@ -5,6 +5,7 @@
     --taken-current-bg: green;
     --extra-empty-bg: 'inherit';
     --plus-bg: gainsboro;
+    --minus-bg: black;
     --block-width: 20px;
     --block-height: var(--block-width);
     --blocks-per-row: 6;
@@ -89,4 +90,9 @@ body {
 .plus-block {
     background-color: var(--plus-bg);
     color: darkgreen;
+}
+
+.minus-block {
+    background-color: var(--minus-bg);
+    color: whitesmoke;
 }

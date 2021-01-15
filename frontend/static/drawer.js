@@ -139,7 +139,6 @@ function drawBoard(board) {
           block.classList.add("plus-block");
           let plus_text_div = document.createElement("div");
           plus_text_div.classList.add("block-with-text");
-          plus_text_div.classList.add("plus-block");
           if (field === 3)
             plus_text_div.textContent += '+1'
           else if (field === 4)
@@ -147,6 +146,13 @@ function drawBoard(board) {
           else if (field === 5)
             plus_text_div.textContent += '+3'
           block.append(plus_text_div);
+        }
+        else if (field === 6) {
+          block.classList.add("minus-block");
+          let minus_text_div = document.createElement("div");
+          minus_text_div.classList.add("block-with-text");
+          minus_text_div.textContent += '-5'
+          block.append(minus_text_div);
         }
         $("#board").append(block);
         column_number += 1

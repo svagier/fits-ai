@@ -463,7 +463,6 @@ class ShapesManager:
                         [0, 1, 0]
                 ])
             ]
-        # TODO specify numpy dtype?
         self.__names_of_initial_shapes = ['LONG_L', 'P_SHAPE', 'LARGE_CORNER', 'RIFLE']
         self.__list_of_all_shapes = [self.__LONG_L, self.__P_SHAPE, self.__LARGE_CORNER, self.__RIFLE, self.__Z_SHAPE,
                                      self.__STAIRS, self.__CHAIR, self.__C_SHAPE, self.__TINY_CORNER,self.__SQUARE,

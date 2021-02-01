@@ -48,12 +48,12 @@ class Game:
     def get_taken_board(self) -> np.array:
         return self.__taken_board
 
-    """This method should be used only for tests! (game_score_tests.py)"""
     def set_taken_board(self, new_taken_board: np.array):
+        """This method should be used only for tests! (game_score_tests.py)"""
         self.__taken_board = new_taken_board
 
-    """end_col is not inclusive, just like with slicing lists"""
     def update_column_peaks_row_indexes(self, start_col: int, end_col: int):
+        """end_col is not inclusive, just like with slicing lists"""
         for col_index, column in enumerate(self.__taken_board.T):
             if start_col <= col_index < end_col:
                 for row_index, field_value in enumerate(column):
@@ -70,8 +70,8 @@ class Game:
                   .format(col_index, block_width, self.board_width - 1))
             return False
 
-    """Row numbers start from top (row number 0 at top of the displayed board)."""
     def find_start_row(self, start_col: int, block: np.array) -> int:
+        """Row numbers start from top (row number 0 at top of the displayed board)."""
         block_height, block_width = block.shape
         peaks_of_columns_below_block = self.__column_peaks_row_indexes[start_col:start_col+block_width]
         highest_column_index = min(peaks_of_columns_below_block)
@@ -135,7 +135,6 @@ class Game:
                                         'should not be placed here. It should have been never allowed to this function '
                                         '(update_main_board).')     # for DEBUG, need to comment out later TODO
                     self.board[row_num, col_num] = FieldType.TAKEN.value
-                    # elif: add handling for PAIRS handling TODO
 
     def place_block(self, start_row: int, start_col: int, block: np.array):
         block_height, block_width = block.shape
@@ -145,8 +144,11 @@ class Game:
         self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)
 
-    """TODO add comment that id returns only serializable data, so np.arrays are converted to lists"""
     def next_turn(self) -> dict:
+        """
+        The data dict returned by this function will be then sent as json to frontend, so np.arrays (new_shape_list
+        and remaining_shapes_list) have to be converted to regular Python lists, since np.arrays are not serializable.
+        """
         new_shape_list = None
         remaining_shapes_list = None
         if not self.is_finish:
@@ -162,7 +164,7 @@ class Game:
         data = {
             "turn_number": self.turn_number,
             "is_finish": self.is_finish,
-            "score": 0,     #TODO
+            "score": 0,     # TODO
             "new_shape":  new_shape_list,
             "remaining_shapes": remaining_shapes_list
         }

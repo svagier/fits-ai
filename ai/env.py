@@ -16,8 +16,12 @@ class FitsEnv(gym.Env):
         # spec = None
 
         # Set these in ALL subclasses
-        # Left, Right, Rotate left, Rotate right, Drop, Discard
-        self.action_space = gym.spaces.Discrete(6)
+        # self.action_space = gym.spaces.Discrete(6)  # for humans: Left, Right, Rotate left, Rotate right, Drop, Discard
+        self.action_space = gym.spaces.Tuple((
+            gym.spaces.Discrete(self.game.board.shape[1]),  # number of columns
+            gym.spaces.Discrete(self.game.shapes_manager.get_max_possible_rotations()),  # Number of rotations; currently taking max number of possible rotations for any shape
+            # TODO should consider changing size of action_space depending on current Shape: https://stackoverflow.com/questions/45001361/is-there-a-way-to-implement-an-openais-environment-where-the-action-space-chan
+        ))
         self.observation_space = gym.spaces.Box(low=FieldType.get_lowest_enum_value(),          # https://github.com/openai/gym/blob/master/gym/spaces/box.py
                                                 high=FieldType.get_highest_enum_value(),
                                                 shape=self.game.board.shape,
@@ -26,7 +30,7 @@ class FitsEnv(gym.Env):
     # def reset(self):
     #     """Starts a new game."""
     #     self.game = self.__get_new_game()
-    #     return np.array(self.game.board.get_possible_states())      # TODO
+    #     return np.array(self.game.get_all_possible_states())      # TODO
 
     @staticmethod
     def __get_new_game() -> Game:

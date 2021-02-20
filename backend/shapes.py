@@ -492,3 +492,7 @@ class ShapesManager:
 
     def get_all_shapes_dict(self):
         return copy.deepcopy(self.__all_shapes_dict)
+
+    def get_max_possible_rotations(self) -> int:
+        number_of_rotations_for_each_shape = [len(shape) for shape in self.__all_shapes_dict]
+        return max(number_of_rotations_for_each_shape)

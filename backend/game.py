@@ -22,9 +22,9 @@ class Game:
         self.board_width = self.board.shape[1]
         self.__taken_board = np.zeros((self.board_height, self.board_width), dtype=int)
         self.__column_peaks_row_indexes = np.array([self.board_height - 1 for i in range(0, self.board_width)], dtype=int)
-        self.__shapes_manager = ShapesManager()
-        self.names_of_initial_shapes = self.__shapes_manager.get_names_of_initial_shapes()
-        self.remaining_shapes_dict = self.__shapes_manager.get_all_shapes_dict()
+        self.shapes_manager = ShapesManager()
+        self.names_of_initial_shapes = self.shapes_manager.get_names_of_initial_shapes()
+        self.remaining_shapes_dict = self.shapes_manager.get_all_shapes_dict()
         self.current_shape = None
         self.turn_number = 0         # 0 means that the game has not started yet. Number of the first turn when move is possible is 1. It will be incremented to 1 in next_turn()
         self.is_finish = False
@@ -280,3 +280,9 @@ class Game:
             "all_empty_reachable_fields": all_empty_remaining_fields - empty_unreachable_fields,
             "empty_unreachable_fields": empty_unreachable_fields
         }
+
+    # def get_all_possible_states(self):
+    #     """Returns all possible states of the board with the corresponding action tuple.
+    #     Tries out every possible way to turn and move the current piece.
+    #     """
+    #     pass

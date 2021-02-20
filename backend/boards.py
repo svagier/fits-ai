@@ -18,6 +18,16 @@ class FieldType(Enum):
     PAIR_4 = 10
     PAIR_5 = 11
 
+    @staticmethod
+    def get_lowest_enum_value() -> int:
+        all_values = [e.value for e in FieldType]
+        return min(all_values)
+
+    @staticmethod
+    def get_highest_enum_value() -> int:
+        all_values = [e.value for e in FieldType]
+        return max(all_values)
+
 
 PAIRS_FIELDS = [FieldType.PAIR_1.value, FieldType.PAIR_2.value, FieldType.PAIR_3.value, FieldType.PAIR_4.value,
                 FieldType.PAIR_5.value]

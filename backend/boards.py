@@ -126,7 +126,7 @@ class BoardManager:
                 [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
             ])
 
-    def get_board(self, board_number: int):
+    def get_board(self, board_number: int) -> np.array:
         if board_number == 1:
             return np.concatenate((copy.deepcopy(self.__extra_empty_rows), copy.deepcopy(self.__board_1)))
         elif board_number == 2:
@@ -138,5 +138,5 @@ class BoardManager:
         else:
             raise Exception("Only 4 boards are available! Valid numbers are 1, 2, 3 and 4.")
 
-    def get_number_of_extra_rows(self):
+    def get_number_of_extra_rows(self) -> int:
         return self.__extra_empty_rows.shape[0]

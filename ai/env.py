@@ -27,10 +27,10 @@ class FitsEnv(gym.Env):
                                                 shape=self.game.board.shape,
                                                 dtype=self.game.board.dtype)
 
-    # def reset(self):
-    #     """Starts a new game."""
-    #     self.game = self.__get_new_game()
-    #     return np.array(self.game.get_all_possible_states())      # TODO
+    def reset(self):
+        """Starts a new game."""
+        self.game = self.__get_new_game()
+        return self.game.get_all_possible_states()
 
     @staticmethod
     def __get_new_game() -> Game:

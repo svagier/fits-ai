@@ -1,3 +1,4 @@
+import copy
 import random
 
 import numpy as np
@@ -281,8 +282,40 @@ class Game:
             "empty_unreachable_fields": empty_unreachable_fields
         }
 
-    # def get_all_possible_states(self):
-    #     """Returns all possible states of the board with the corresponding action tuple.
-    #     Tries out every possible way to turn and move the current piece.
-    #     """
-    #     pass
+    def __get_board_after_potential_move(self, start_row: int, start_col: int, block: np.array) -> np.array:
+        block_height, block_width = block.shape
+        end_row = start_row + block_height  # this row will not be included (exclusive indexing)
+        end_col = start_col + block_width  # this column will not be included (exclusive indexing)
+        new_board = copy.deepcopy(self.board)
+        for row_num in range(start_row, end_row):
+            for col_num in range(start_col, end_col):
+                incoming_block_exists_on_this_field = block[row_num - start_row, col_num - start_col] == 1
+                if incoming_block_exists_on_this_field:
+                    field_value_on_board = new_board[row_num, col_num]
+                    if field_value_on_board == FieldType.TAKEN.value:
+                        raise Exception('If this exception is raised, it means that there is a bug and this block'
+                                        'should not be placed here. It should have been never allowed to this function '
+                                        '(update_main_board).')  # for DEBUG, need to comment out later TODO
+                    new_board[row_num, col_num] = FieldType.TAKEN.value
+        return new_board
+
+    def get_all_possible_states(self) -> [((int, int), np.array)]:
+        """
+        Tries out every possible move for every rotation of the current Shape and returns all possible states of the
+        board (all possible boards).
+        Currently state is the board - 2D array. In the future it may be changed, for example [peaks, remaining shapes,
+        covered pairs] etc.
+
+        Returns:
+        states - list of tuples (action, state), where:
+            action (tuple(int, int)) = (start_col_index, index_of_rotation)
+            state (np.array) = board after given move
+        """
+        states = []
+        for index_of_rotation, rotated_shape in enumerate(self.current_shape):
+            for start_col_index in range(0, self.board_width - rotated_shape.shape[1]):
+                start_row_index = self.find_start_row(start_col_index, rotated_shape)
+                action = (start_col_index, index_of_rotation)
+                state = self.__get_board_after_potential_move(start_row_index, start_col_index, rotated_shape)
+                states.append((action, state))
+        return states

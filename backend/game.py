@@ -29,6 +29,7 @@ class Game:
         self.current_shape = None
         self.turn_number = 0         # 0 means that the game has not started yet. Number of the first turn when move is possible is 1. It will be incremented to 1 in next_turn()
         self.is_finish = False
+        self.__previous_score = self.calculate_total_score()
 
     def get_random_shape(self):
         number_of_remaining_shapes = len(self.remaining_shapes_dict)
@@ -145,6 +146,12 @@ class Game:
         self.update_main_board(start_row, end_row, start_col, end_col, block)
         self.update_column_peaks_row_indexes(start_col, end_col)
 
+    def place_rotated_shape(self, start_row: int, start_col: int, rotation_number: int):
+        if rotation_number >= len(self.current_shape):
+            raise IndexError('Rotation number {} is an index out of bounds for current shape, which has {} as maximum '
+                             'index.'.format(rotation_number, len(self.current_shape)))
+        self.place_block(start_row, start_col, self.current_shape[rotation_number])
+
     def next_turn(self) -> dict:
         """
         The data dict returned by this function will be then sent as json to frontend, so np.arrays (new_shape_list
@@ -162,13 +169,16 @@ class Game:
             else:
                 remaining_shapes_list = None
 
+        total_score = self.calculate_total_score()
         data = {
             "turn_number": self.turn_number,
             "is_finish": self.is_finish,
-            "score": 0,     # TODO
+            "previous_score": self.__previous_score,
+            "score": total_score,
             "new_shape":  new_shape_list,
             "remaining_shapes": remaining_shapes_list
         }
+        self.__previous_score = total_score
         return data
 
     def calculate_total_score(self) -> int:
@@ -299,7 +309,7 @@ class Game:
                     new_board[row_num, col_num] = FieldType.TAKEN.value
         return new_board
 
-    def get_all_possible_states(self) -> [((int, int), np.array)]:
+    def get_all_possible_states(self) -> [((int, int, int), np.array)]:
         """
         Tries out every possible move for every rotation of the current Shape and returns all possible states of the
         board (all possible boards).
@@ -308,14 +318,14 @@ class Game:
 
         Returns:
         states - list of tuples (action, state), where:
-            action (tuple(int, int)) = (start_col_index, index_of_rotation)
+            action (tuple(int, int, int)) = (start_row_index, start_col_index, index_of_rotation)
             state (np.array) = board after given move
         """
         states = []
         for index_of_rotation, rotated_shape in enumerate(self.current_shape):
             for start_col_index in range(0, self.board_width - rotated_shape.shape[1]):
                 start_row_index = self.find_start_row(start_col_index, rotated_shape)
-                action = (start_col_index, index_of_rotation)
+                action = (start_row_index, start_col_index, index_of_rotation)
                 state = self.__get_board_after_potential_move(start_row_index, start_col_index, rotated_shape)
                 states.append((action, state))
         return states

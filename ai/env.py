@@ -35,3 +35,25 @@ class FitsEnv(gym.Env):
     @staticmethod
     def __get_new_game() -> Game:
         return Game(BOARD_NUMBER)
+
+    def step(self, action: (int, int, int)):
+        """
+        Performs one step in the game.
+
+        Params:
+            action (tuple(int, int, int)) = (start_row_index, start_col_index, index_of_rotation)
+
+        Returns:
+            observation (object): agent's observation of the current environment    # TODO
+            reward (float): amount of reward returned after previous action
+            done (bool): whether the episode has ended, in which case further step() calls will return undefined results
+            info (dict): contains auxiliary diagnostic information (helpful for debugging, and sometimes learning)
+        """
+        start_row_index, start_col_index, index_of_rotation = action
+        self.game.place_rotated_shape(start_row_index, start_col_index, index_of_rotation)
+
+        turn_dict = self.game.next_turn()
+        done = turn_dict['is_finish']
+        reward = float(abs(turn_dict['previous_score'] - turn_dict['score']))
+
+        return self.game.get_all_possible_states(), reward, done, {}        # TODO is it necessary to return get_all_possible_states?

@@ -1,3 +1,5 @@
+import random
+
 import gym
 
 from backend.boards import FieldType
@@ -7,6 +9,8 @@ BOARD_NUMBER = 1        # TODO shouldn't this be passed as parameter?
 
 
 class FitsEnv(gym.Env):
+    metadata = {'render.modes': ['human']}
+
     def __init__(self):
         super(FitsEnv, self).__init__()
         self.game = self.__get_new_game()
@@ -26,11 +30,6 @@ class FitsEnv(gym.Env):
                                                 high=FieldType.get_highest_enum_value(),
                                                 shape=self.game.board.shape,
                                                 dtype=self.game.board.dtype)
-
-    def reset(self):
-        """Starts a new game."""
-        self.game = self.__get_new_game()
-        return self.game.get_all_possible_states()
 
     @staticmethod
     def __get_new_game() -> Game:
@@ -57,3 +56,19 @@ class FitsEnv(gym.Env):
         reward = float(abs(turn_dict['previous_score'] - turn_dict['score']))
 
         return self.game.get_all_possible_states(), reward, done, {}        # TODO is it necessary to return get_all_possible_states?
+
+    def reset(self):        # TODO add modes ('human' etc)
+        """Starts a new game."""
+        self.game = self.__get_new_game()
+        return self.game.get_all_possible_states()
+
+    def render(self, mode='human'):
+        pass            # TODO
+
+    def close(self):
+        pass            # TODO
+
+    def seed(self, seed=None):
+        """Set the random seed for the game."""
+        random.seed(seed)
+        return [seed]

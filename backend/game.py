@@ -12,6 +12,7 @@ DISCARD_SHAPE_ACTION = ('discard', 'discard')     # TODO put it in better place?
 
 class Game:
     def __init__(self, board_number: int = 1, random_shapes: bool = True):
+        self.__board_manager = BoardManager()
         self.board_number = board_number
         if board_number in [1, 2, 3, 4]:        # allowed numbers of boards
             self.board = self.__board_manager.get_board(board_number)       # on this board changes will be put
@@ -21,7 +22,6 @@ class Game:
             self.board = self.__board_manager.get_board(1)
             self.__initial_board = self.__board_manager.get_board(1)
         self.random_shapes = random_shapes
-        self.__board_manager = BoardManager()
         self.number_of_extra_rows_on_board = self.__board_manager.get_number_of_extra_rows()
         self.board_height = self.board.shape[0]     # board height including extra rows (number_of_extra_rows_on_board)
         self.board_width = self.board.shape[1]

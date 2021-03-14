@@ -15,12 +15,19 @@ app = Flask(__name__, template_folder=template_dir, static_url_path=static_dir)
 # socket_io = SocketIO(app)
 socket_io = SocketIO(app, message_queue='redis://')
 
-main_template_name = 'human_playing.html'
+human_playing_template_name = 'human_playing.html'
+ai_playing_template_name = 'ai_playing.html'
+main_template_name = human_playing_template_name
 
 
 @app.route('/')
 def index():
     return render_template(main_template_name)
+
+
+@app.route('/train_ai')
+def train_ai():
+    return render_template(ai_playing_template_name)
 
 
 @app.route('/game_setup', methods=['POST'])

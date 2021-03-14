@@ -15,32 +15,43 @@
 
 <body onload="setup()">
     <div class="container">
+        {% block heading %}
+        {% endblock heading %}
         <div class="row mt-5">
             <div class="col">
+                {% block board_display %}
                 <div id="current-shape"></div>
                 <div id="board"></div>
+                {% endblock board_display %}
+                {% block score_display %}
                 <div class="row score-container">
                     <span>Current score:</span>
                     <span id="currentScoreDisplay" class="col"></span>
                 </div>
+                {% endblock score_display %}
+                {% block game_buttons %}
                 <div class="row">
                     <button type="button" class="btn btn-danger mr-2" onclick="restartGame()">Restart</button>
                     <button type="button" class="btn btn-light mr-2 level-button active" onclick="changeToBoardNumber(1); markActive(this);">Level 1</button>
                     <button type="button" class="btn btn-light mr-2 level-button" onclick="changeToBoardNumber(2); markActive(this);">Level 2</button>
                     <button type="button" class="btn btn-light mr-2 level-button" onclick="changeToBoardNumber(3); markActive(this);">Level 3</button>
                     <button type="button" class="btn btn-light level-button" onclick="changeToBoardNumber(4); markActive(this);">Level 4</button>
-
                 </div>
+                {% endblock game_buttons %}
             </div>
             <div class="col">
+                {% block remaining_shapes %}
                 <div id="allRemainingShapesContainer" class="all-remaining-shapes-container"></div>
+                {% endblock remaining_shapes %}
                 <div class="row">
+                    {% block extra_current_stats %}
                     <div class="col" id="extraCurrentStats">
                         <p>Fields in current shape: <span id="takenFieldsInCurrentShape"></span></p>
                         <p>Fields in other remaining shapes: <span id="takenFieldsInOtherRemainingShapes"></span></p>
                         <p>All remaining reachable empty fields: <span id="allRemainingReachableEmptyFields"></span></p>
                         <p>Unreachable empty fields: <span id="allUnreachableEmptyFields"></span></p>
                     </div>
+                    {% endblock extra_current_stats %}
                 </div>
             </div>
         </div>

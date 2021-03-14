@@ -15,10 +15,12 @@ app = Flask(__name__, template_folder=template_dir, static_url_path=static_dir)
 # socket_io = SocketIO(app)
 socket_io = SocketIO(app, message_queue='redis://')
 
+main_template_name = 'human_playing.html'
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/game_setup', methods=['POST'])
@@ -32,7 +34,7 @@ def game_setup():
             "widest_block_width": 4     # TODO add dynamic
         }
         socket_io.emit('game_setup', game_data)
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/show_board', methods=['POST'])
@@ -40,7 +42,7 @@ def show_board():
     if request.method == 'POST':
         board = app.game.get_board()
         socket_io.emit('board_display', board.tolist())
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/can_place_block', methods=['POST'])
@@ -54,13 +56,13 @@ def can_place_block():
             if app.game.player_place_block(start_column, block_to_be_placed):
                 socket_io.emit('board_display', app.game.get_board().tolist())
                 next_turn()
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/reject_current_block', methods=['POST'])
 def reject_current_block():
     next_turn()
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/start_game', methods=['POST'])
@@ -69,7 +71,7 @@ def start_game():
         current_board_number = app.game.board_number
         app.game = Game(current_board_number)
         next_turn()
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/restart_game', methods=['POST'])
@@ -80,7 +82,7 @@ def restart_game():
         board = app.game.get_board()
         socket_io.emit('board_display', board.tolist())
         next_turn()
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 @app.route('/display_board_1', methods=['POST'])
@@ -112,7 +114,7 @@ def display_board_number(board_number: int):
     board = app.game.get_board()
     socket_io.emit('board_display', board.tolist())
     next_turn()
-    return render_template('index.html')
+    return render_template(main_template_name)
 
 
 def next_turn():

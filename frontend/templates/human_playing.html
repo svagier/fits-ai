@@ -1,0 +1,6 @@
+{% extends 'game_display.html' %}
+
+{% block imports %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='key_handling.js') }}"></script>
+{% endblock imports %}

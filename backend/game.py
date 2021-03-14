@@ -373,7 +373,6 @@ class Game:
                     board_after_move = self.__get_board_after_potential_move(start_row_index, start_col_index, rotated_shape)
                     tensor_board_after_move = torch.FloatTensor(board_after_move)
                     states[(start_col_index, index_of_rotation)] = tensor_board_after_move
-        self.print_board_to_terminal()
         print('Number of states: ', len(states))
         return states
 

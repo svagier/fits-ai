@@ -27,11 +27,14 @@ socketio.on('game_setup', (setup_data) => {
   current_block_start_column = 0
 })
 
-socketio.on('board_display', (board) => {
-  $(document).ready(function () {
-    drawBoard(board)
-  });
-})
+socketio.on('connect', function() {
+  socketio.on('board_display', (board) => {
+    $(document).ready(function () {
+      drawBoard(board)
+    });
+  })
+});
+
 
 socketio.on('current_shape', (current_block_rotations) => {
   if (current_block_rotations) {
@@ -91,11 +94,12 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
   })
 })
 
-
-// socketio.on('socketio_test', (msg) => {
-//   console.log(msg)
-//   console.log('-----------------------------------------------!!!!!!!!!!!!!!1')
-// })
+socketio.on('connect', function() {
+  socketio.on('socketio_test', function(msg) {
+    console.log(msg)
+    console.log('-----------------------------------------------!!!!!!!!!!!!!!1')
+    });
+});
 
 socketio.on('display_score', (score) => {
   $(document).ready(function () {

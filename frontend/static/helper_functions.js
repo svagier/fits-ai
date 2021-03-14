@@ -91,6 +91,12 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
   })
 })
 
+
+// socketio.on('socketio_test', (msg) => {
+//   console.log(msg)
+//   console.log('-----------------------------------------------!!!!!!!!!!!!!!1')
+// })
+
 socketio.on('display_score', (score) => {
   $(document).ready(function () {
     $('#currentScoreDisplay').text(score);

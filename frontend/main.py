@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 import os
 from os.path import dirname
 
@@ -9,7 +12,8 @@ from backend.game import Game
 template_dir = os.path.join(dirname(__file__), 'templates')
 static_dir = os.path.join(dirname(__file__), 'static')
 app = Flask(__name__, template_folder=template_dir, static_url_path=static_dir)
-socket_io = SocketIO(app)
+# socket_io = SocketIO(app)
+socket_io = SocketIO(app, message_queue='redis://')
 
 
 @app.route('/')
@@ -131,4 +135,5 @@ if __name__ == '__main__':
     app.port = 5000
     default_board_number = 1
     app.game = Game(default_board_number)
-    socket_io.run(app, host=app.url_base, port=app.port, debug=True)
+    message_queue = 'redis://'
+    socket_io.run(app, host=app.url_base, port=app.port)

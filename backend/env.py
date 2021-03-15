@@ -28,15 +28,24 @@ class FitsEnv:
         if action != DISCARD_SHAPE_ACTION:
             start_col, rotation_index = action
             self.game.player_place_block(start_col, self.game.current_shape[rotation_index])
-
-        if self.__render:
-            self.render()
-
         turn_dict = self.game.next_turn(random_shape=False)
         turn_score = turn_dict['score'] - turn_dict['previous_score']
         is_gameover = turn_dict['is_finish']
+        if self.__render:
+            self.render(turn_dict)
         return turn_score, is_gameover
 
-    def render(self):
+    def render(self, turn_dict: dict):
         self.__socketio.emit('board_display', self.game.board.tolist())
+        self.__socketio.emit('extra_current_stats', self.game.get_extra_current_stats())
+        if turn_dict['is_finish']:
+            final_score = self.game.calculate_total_score()
+            self.__socketio.emit('finished_game', final_score)
+        else:
+            if 'new_shape' in turn_dict.keys():
+                self.__socketio.emit('current_shape', turn_dict['new_shape'])
+            if 'remaining_shapes' in turn_dict.keys():
+                self.__socketio.emit('remaining_shapes', turn_dict['remaining_shapes'])
+            score = self.game.calculate_total_score()
+            self.__socketio.emit('display_score', score)
 

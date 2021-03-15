@@ -312,7 +312,8 @@ class Game:
             "taken_fields_in_current_shape": current_shape_fields_taken,
             "taken_fields_in_remaining_shapes_without_current": remaining_shapes_fields_taken,
             "all_empty_reachable_fields": all_empty_remaining_fields - empty_unreachable_fields,
-            "empty_unreachable_fields": empty_unreachable_fields
+            "empty_unreachable_fields": empty_unreachable_fields,
+            "turn_number": self.turn_number
         }
 
     def __get_board_after_potential_move(self, start_row: int, start_col: int, block: np.array) -> np.array:

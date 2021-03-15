@@ -6,3 +6,9 @@ ai_socketio.on('training_info', (training_data) => {
     $('#extraCurrentStats #lastReward').text(training_data['last_reward']);
   });
 })
+
+ai_socketio.on('extra_current_stats', (extra_current_stats) => {
+  $(document).ready(function () {
+    $('#extraCurrentStats #turnNumber').text(extra_current_stats.turn_number);
+  });
+})

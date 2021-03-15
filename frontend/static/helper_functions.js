@@ -45,7 +45,7 @@ socketio.on('current_shape', (current_block_rotations) => {
     drawCurrentBlock(current_block_rotations[current_rotation])
   }
   else {
-    $('curremt-shape').empty();
+    $('current-shape').empty();
   }
 })
 
@@ -94,13 +94,6 @@ socketio.on('remaining_shapes', (list_of_remaining_shapes) => {
   })
 })
 
-socketio.on('connect', function() {
-  socketio.on('socketio_test', function(msg) {
-    console.log(msg)
-    console.log('-----------------------------------------------!!!!!!!!!!!!!!1')
-    });
-});
-
 socketio.on('display_score', (score) => {
   $(document).ready(function () {
     $('#currentScoreDisplay').text(score);
@@ -123,6 +116,7 @@ socketio.on('extra_current_stats', (extra_current_stats) => {
     $('#extraCurrentStats #takenFieldsInOtherRemainingShapes').text(extra_current_stats.taken_fields_in_remaining_shapes_without_current);
     $('#extraCurrentStats #allUnreachableEmptyFields').text(extra_current_stats.empty_unreachable_fields);
     $('#extraCurrentStats #allRemainingReachableEmptyFields').text(extra_current_stats.all_empty_reachable_fields);
+    $('#extraCurrentStats #turnNumber').text(extra_current_stats.turn_number);
   });
 })
 

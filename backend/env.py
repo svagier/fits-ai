@@ -12,6 +12,9 @@ class FitsEnv:
         if render:
             self.__socketio = SocketIO(message_queue='redis://')
 
+    def should_render(self) -> bool:
+        return self.__render
+
     def _board_properties(self):         # get_state_properties()
         return torch.FloatTensor(self.game.board)
 

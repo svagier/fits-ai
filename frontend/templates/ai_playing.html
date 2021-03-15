@@ -1,5 +1,17 @@
 {% extends 'game_display.html' %}
 
+{% block imports %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='ai_functions.js') }}"></script>
+{% endblock imports %}
+
 {% block heading %}
 <h1>AI playing</h1>
 {% endblock heading %}
+
+{% block extra_current_stats %}
+<div class="col" id="extraCurrentStats">
+    <p>Epoch: <span id="epochNumber"></span></p>
+    <p>Last reward: <span id="lastReward"></span></p>
+</div>
+{% endblock extra_current_stats %}

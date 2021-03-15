@@ -5,6 +5,14 @@
     <script src="{{ url_for('static', filename='key_handling.js') }}"></script>
 {% endblock imports %}
 
+{% block extra_current_stats %}
+<div class="col" id="extraCurrentStats">
+    <p>Fields in current shape: <span id="takenFieldsInCurrentShape"></span></p>
+    <p>Fields in other remaining shapes: <span id="takenFieldsInOtherRemainingShapes"></span></p>
+    <p>All remaining reachable empty fields: <span id="allRemainingReachableEmptyFields"></span></p>
+    <p>Unreachable empty fields: <span id="allUnreachableEmptyFields"></span></p>
+</div>
+{% endblock extra_current_stats %}
 
 {% block finished_game_modal %}
 <div class="modal fade" id="finishedGameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

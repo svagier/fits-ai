@@ -2,6 +2,7 @@
 
 {% block imports %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='human_functions.js') }}"></script>
     <script src="{{ url_for('static', filename='key_handling.js') }}"></script>
 {% endblock imports %}
 

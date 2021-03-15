@@ -1,4 +1,7 @@
 import eventlet
+
+from backend.boards import BoardManager
+
 eventlet.monkey_patch()
 
 import os
@@ -49,6 +52,14 @@ def show_board():
     if request.method == 'POST':
         board = app.game.get_board()
         socket_io.emit('board_display', board.tolist())
+    return render_template(main_template_name)
+
+
+@app.route('/show_empty_board', methods=['POST'])
+def show_empty_board():
+    if request.method == 'POST':
+        empty_board = BoardManager().get_board(1)
+        socket_io.emit('board_display', empty_board.tolist())
     return render_template(main_template_name)
 
 

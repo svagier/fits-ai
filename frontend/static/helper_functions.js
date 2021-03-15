@@ -11,12 +11,6 @@ let current_block_width;    // in fields
 const socketio = io();
 
 
-function setup() {
-  $.post("/game_setup")
-  $.post("/show_board")
-  $.post("/start_game")
-}
-
 socketio.on('game_setup', (setup_data) => {
   number_of_columns = setup_data['number_of_columns']
   field_size = setup_data['field_size']

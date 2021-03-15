@@ -1,5 +1,10 @@
 const ai_socketio = io();
 
+function setup() {
+  $.post("/game_setup")
+  $.post("/show_empty_board")
+}
+
 ai_socketio.on('training_info', (training_data) => {
   $(document).ready(function () {
     $('#extraCurrentStats #epochNumber').text(training_data['epoch']);
